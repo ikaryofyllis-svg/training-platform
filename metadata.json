@@ -1,0 +1,7 @@
+{
+  "name": " Training Platform",
+  "description": "A high-performance strength training and tracking application featuring advanced workout plans, progress visualization, and an AI-powered fitness coach.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
