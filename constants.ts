@@ -94,6 +94,14 @@ export const EXERCISE_LIBRARY: Exercise[] = [
     image: '',
    tips: []
   },
+{
+    id: 'tricep_extension',
+    name: 'Overhead Tricep Extension',
+    reps: '',
+    sets: 0,
+    image: '',
+   tips: []
+  },
   {
     id: 'lat_pulldown',
     name: 'Lat Pulldown',
