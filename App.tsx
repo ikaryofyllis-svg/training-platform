@@ -33,7 +33,7 @@ interface AppData {
 
 const App: React.FC = () => {
 
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [currentView, setCurrentView] = useState<ViewType>(ViewType.HOME);
   const [units, setUnits] = useState<UnitSystem>(UnitSystem.METRIC);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
