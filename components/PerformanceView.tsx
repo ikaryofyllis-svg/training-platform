@@ -25,7 +25,7 @@ const PerformanceView: React.FC<PerformanceViewProps> = ({
   currentDay,
   exerciseLogs
 }) => {
-
+  console.log("exerciseLogs:", exerciseLogs);
   const [mode, setMode] = useState<PerformanceMode>('LIFETIME');
   const [selectedProgramLift, setSelectedProgramLift] =
     useState<'squat' | 'bench' | 'deadlift' | 'ohp'>('squat');
@@ -187,11 +187,11 @@ const PerformanceView: React.FC<PerformanceViewProps> = ({
 
         <div className="grid grid-cols-2 gap-4">
           {[
-            { label: 'Squat', key: 'squat', icon: 'expand' },
-            { label: 'Bench', key: 'bench', icon: 'horizontal_rule' },
-            { label: 'Deadlift', key: 'deadlift', icon: 'vertical_align_top' },
-            { label: 'OHP', key: 'ohp', icon: 'upload' }
-          ].map((item) => {
+  { label: 'Squat', key: 'back_squat', icon: 'expand' },
+  { label: 'Bench', key: 'bench_press', icon: 'horizontal_rule' },
+  { label: 'Deadlift', key: 'deadlift', icon: 'vertical_align_top' },
+  { label: 'OHP', key: 'overhead_press', icon: 'upload' }
+].map((item) => {
             const pr = getLifetimePR(item.key);
 
             return (

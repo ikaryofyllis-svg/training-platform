@@ -37,14 +37,19 @@ const DailyWorkoutView: React.FC<DailyWorkoutViewProps> = ({
   };
 
   const handleSaveExerciseLog = (exerciseId: string) => {
-    const exerciseEntry = session.exercises?.find(
-      e => e.exerciseId === exerciseId
-    );
+  const exerciseEntry = session.exercises?.find(
+    e => e.exerciseId === exerciseId
+  );
 
-    if (!exerciseEntry?.loggedWeight) return;
+  if (!exerciseEntry?.loggedWeight) return;
 
-    onSaveLog(exerciseId, exerciseEntry.loggedWeight);
-  };
+  onSaveLog(
+    exerciseId,
+    exerciseEntry.loggedWeight,
+    exerciseEntry.reps,
+    exerciseEntry.sets
+  );
+};
 
   const isCardioDay = !session.exercises || session.exercises.length === 0;
 

@@ -233,7 +233,31 @@ export const EXERCISE_LIBRARY: Exercise[] = [
     sets: 0,
     image: '',
     tips: ['Neutral spine', 'Controlled movement']
-  }
+  },
+{
+  id: 'barbell_row',
+  name: 'Barbell Row',
+  reps: '',
+  sets: 0,
+  image: '',
+  tips: ['Flat back', 'Pull to lower chest', 'Control eccentric']
+},
+{
+  id: 'single_arm_row',
+  name: 'Single Arm Dumbbell Row',
+  reps: '',
+  sets: 0,
+  image: '',
+  tips: ['Stretch at bottom', 'Drive elbow back']
+},
+{
+  id: 'seated_row_wide_grip',
+  name: 'Seated Row (Wide Grip)',
+  reps: '',
+  sets: 0,
+  image: '',
+  tips: ['Chest up', 'Pull wide to ribs']
+}
 
 ];
 
@@ -689,7 +713,7 @@ export const WORKOUT_PLANS: WorkoutPlan[] = [
     { exerciseId: 'single_arm_row', sets: 3, reps: '12' },
 
     { exerciseId: 'bicep_curl', sets: 3, reps: '12' },
-    { exerciseId: 'hammer_curl', sets: 3, reps: '12' }
+    { exerciseId: 'tricep_extention', sets: 3, reps: '12' }
   ]
 },
 
@@ -711,8 +735,8 @@ export const WORKOUT_PLANS: WorkoutPlan[] = [
           title: 'Chest + Upper Volume',
           exercises: [
             { exerciseId: 'bench_press', sets: 4, reps: '8-10' },
-            { exerciseId: 'incline_dumbbell_press', sets: 3, reps: '10-12' },
-            { exerciseId: 'cable_fly', sets: 3, reps: '12-15' },
+            { exerciseId: 'incline_db_press', sets: 3, reps: '10-12' },
+            { exerciseId: 'chest_fly', sets: 3, reps: '12-15' },
             { exerciseId: 'lateral_raise', sets: 3, reps: '15' }
           ]
         },
@@ -738,7 +762,7 @@ export const WORKOUT_PLANS: WorkoutPlan[] = [
             { exerciseId: 'shoulder_press_machine', sets: 5, reps: '8-10' },
             { exerciseId: 'lateral_raise', sets: 4, reps: '12' },
             { exerciseId: 'reverse_fly', sets: 4, reps: '12' },
-            { exerciseId: 'cable_face_pull', sets: 3, reps: '15' }
+            { exerciseId: 'face_pull', sets: 3, reps: '15' }
           ]
         },
 
@@ -778,8 +802,8 @@ export const WORKOUT_PLANS: WorkoutPlan[] = [
           title: 'Chest + Upper Pump',
           exercises: [
             { exerciseId: 'bench_press', sets: 4, reps: '8' },
-            { exerciseId: 'incline_dumbbell_press', sets: 4, reps: '10' },
-            { exerciseId: 'cable_fly', sets: 4, reps: '12-15' },
+            { exerciseId: 'incline_db_press', sets: 4, reps: '10' },
+            { exerciseId: 'chest_fly', sets: 4, reps: '12-15' },
             { exerciseId: 'lateral_raise', sets: 4, reps: '15' }
           ]
         },
@@ -887,8 +911,8 @@ export const WORKOUT_PLANS: WorkoutPlan[] = [
       title: 'Chest + Upper',
       exercises: [
         { exerciseId: 'bench_press', sets: 4, reps: '6-8' },
-        { exerciseId: 'incline_dumbbell_press', sets: 4, reps: '8-10' },
-        { exerciseId: 'cable_fly', sets: 3, reps: '12-15' }
+        { exerciseId: 'incline_db_press', sets: 4, reps: '8-10' },
+        { exerciseId: 'chest_fly', sets: 3, reps: '12-15' }
       ]
     },
 
@@ -1002,10 +1026,10 @@ export const WORKOUT_PLANS: WorkoutPlan[] = [
 
         // HEAVY
         { exerciseId: 'bench_press', sets: 4, reps: '6-8' },
-        { exerciseId: 'incline_dumbbell_press', sets: 4, reps: '6-8' },
+        { exerciseId: 'incline_db_press', sets: 4, reps: '6-8' },
 
         // ACCESSORY
-        { exerciseId: 'cable_fly', sets: 3, reps: '12-15' },
+        { exerciseId: 'chest_fly', sets: 3, reps: '12-15' },
         { exerciseId: 'lateral_raise', sets: 3, reps: '12-15' }
       ]
     },
