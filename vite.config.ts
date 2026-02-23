@@ -8,9 +8,12 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
 
-      workbox: {
-        globPatterns: ['**/*.{js,css,html,png,svg,ico}']
-      },
+     workbox: {
+  	cleanupOutdatedCaches: true,
+  	clientsClaim: true,
+  	skipWaiting: true,
+  	globPatterns: ['**/*.{js,css,html,png,svg,ico}']
+     },
 
       manifest: {
         id: '/',

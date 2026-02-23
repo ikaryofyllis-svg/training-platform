@@ -310,6 +310,7 @@ const loadInitialData = (): AppData => {
         return (
           <HomeView
             onNavigate={setCurrentView}
+            onViewIntro={handleViewIntro}
             activePlanId={activePlanId}
             units={units}
             sessions={sessions}
