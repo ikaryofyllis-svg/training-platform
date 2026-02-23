@@ -631,9 +631,396 @@ export const WORKOUT_PLANS: WorkoutPlan[] = [
     }
 
   ]
-}
+},
+{
+  id: 'volume-overdrive',
+  name: 'Volume Overdrive',
+  durationWeeks: 16,
+  goalType: 'Hypertrophy + Conditioning',
+  category: ['hypertrophy'],
+  difficulty: 'Intermediate',
+  description: 'High-volume hypertrophy protocol focused on muscular size, back density and lower-body development while maintaining cardio conditioning.',
+  image: 'https://images.unsplash.com/photo-1599058917765-a780eda07a3e?q=80&w=400&auto=format&fit=crop',
 
+  features: [
+    {
+      title: 'Back Volume Emphasis',
+      subtitle: 'High Row & Pulldown Density',
+      icon: 'fitness_center'
+    },
+    {
+      title: 'Lower Body Growth',
+      subtitle: 'Quad + Glute Expansion',
+      icon: 'sports_gymnastics'
+    }
+  ],
+
+  phases: [
+
+    // ================= PHASE 1 =================
+    {
+      id: 'phase1',
+      name: 'Accumulation',
+      startWeek: 1,
+      endWeek: 2,
+
+      weeklyStructure: [
+        {
+          dayIndex: 1,
+          title: 'Intervals + Shoulders',
+          exercises: [
+            { exerciseId: 'shoulder_press_machine', sets: 4, reps: '10-12' },
+            { exerciseId: 'lateral_raise', sets: 4, reps: '12-15' },
+            { exerciseId: 'reverse_fly', sets: 4, reps: '12-15' },
+            { exerciseId: 'upright_row', sets: 3, reps: '12' }
+          ]
+        },
+
+       {
+  dayIndex: 2,
+  title: 'Back + Arms Volume',
+  exercises: [
+
+    // NEW
+    { exerciseId: 'pull_ups', sets: 3, reps: 'AMRAP' },
+
+    { exerciseId: 'lat_pulldown', sets: 3, reps: '10-12' }, // reduced from 4
+    { exerciseId: 'seated_row', sets: 4, reps: '10-12' },
+    { exerciseId: 'single_arm_row', sets: 3, reps: '12' },
+
+    { exerciseId: 'bicep_curl', sets: 3, reps: '12' },
+    { exerciseId: 'hammer_curl', sets: 3, reps: '12' }
+  ]
+},
+
+        {
+          dayIndex: 3,
+          title: 'Lower Body Volume',
+          exercises: [
+            { exerciseId: 'back_squat', sets: 4, reps: '10' },
+            { exerciseId: 'rdl', sets: 4, reps: '10' },
+            { exerciseId: 'walking_lunges', sets: 3, reps: '12' },
+            { exerciseId: 'quad_extension', sets: 3, reps: '15' },
+            { exerciseId: 'hamstring_curl', sets: 3, reps: '15' },
+            { exerciseId: 'calf_raise_machine', sets: 4, reps: '15' }
+          ]
+        },
+
+        {
+          dayIndex: 4,
+          title: 'Chest + Upper Volume',
+          exercises: [
+            { exerciseId: 'bench_press', sets: 4, reps: '8-10' },
+            { exerciseId: 'incline_dumbbell_press', sets: 3, reps: '10-12' },
+            { exerciseId: 'cable_fly', sets: 3, reps: '12-15' },
+            { exerciseId: 'lateral_raise', sets: 3, reps: '15' }
+          ]
+        },
+
+        { dayIndex: 5, title: 'Long Run' },
+        { dayIndex: 6, title: 'Recovery' },
+        { dayIndex: 7, title: 'Rest' }
+      ]
+    },
+
+    // ================= PHASE 2 =================
+    {
+      id: 'phase2',
+      name: 'High Volume Overload',
+      startWeek: 3,
+      endWeek: 6,
+
+      weeklyStructure: [
+        {
+          dayIndex: 1,
+          title: 'Intervals + Shoulders',
+          exercises: [
+            { exerciseId: 'shoulder_press_machine', sets: 5, reps: '8-10' },
+            { exerciseId: 'lateral_raise', sets: 4, reps: '12' },
+            { exerciseId: 'reverse_fly', sets: 4, reps: '12' },
+            { exerciseId: 'cable_face_pull', sets: 3, reps: '15' }
+          ]
+        },
+
+      {
+  dayIndex: 2,
+  title: 'Back Density + Arms',
+  exercises: [
+
+    // NEW FIRST
+    { exerciseId: 'pull_ups', sets: 3, reps: 'AMRAP' },
+
+    { exerciseId: 'lat_pulldown', sets: 3, reps: '8-10' }, // reduced from 5
+    { exerciseId: 'seated_row', sets: 4, reps: '10' },
+    { exerciseId: 'single_arm_row', sets: 3, reps: '12' },
+    { exerciseId: 'straight_arm_pulldown', sets: 3, reps: '12-15' },
+
+    { exerciseId: 'bicep_curl', sets: 4, reps: '10' }
+  ]
+},
+
+        {
+          dayIndex: 3,
+          title: 'Lower Body Expansion',
+          exercises: [
+            { exerciseId: 'back_squat', sets: 5, reps: '8-10' },
+            { exerciseId: 'leg_press', sets: 4, reps: '12' },
+            { exerciseId: 'rdl', sets: 4, reps: '8-10' },
+            { exerciseId: 'walking_lunges', sets: 3, reps: '12' },
+            { exerciseId: 'quad_extension', sets: 3, reps: '15' },
+            { exerciseId: 'hamstring_curl', sets: 3, reps: '15' },
+            { exerciseId: 'calf_raise_machine', sets: 4, reps: '15' }
+          ]
+        },
+
+        {
+          dayIndex: 4,
+          title: 'Chest + Upper Pump',
+          exercises: [
+            { exerciseId: 'bench_press', sets: 4, reps: '8' },
+            { exerciseId: 'incline_dumbbell_press', sets: 4, reps: '10' },
+            { exerciseId: 'cable_fly', sets: 4, reps: '12-15' },
+            { exerciseId: 'lateral_raise', sets: 4, reps: '15' }
+          ]
+        },
+
+        { dayIndex: 5, title: 'Long Run' },
+        { dayIndex: 6, title: 'Recovery' },
+        { dayIndex: 7, title: 'Rest' }
+      ]
+    },
+
+    // ================= PHASE 3 =================
+    {
+      id: 'phase3',
+    name: 'Deload',
+    startWeek: 7,
+    endWeek: 7,
+    weeklyStructure: [
+      {
+        dayIndex: 1,
+        title: 'Upper (Deload)',
+        exercises: [
+          { exerciseId: 'shoulder_press_machine', sets: 3, reps: '8' },
+          { exerciseId: 'lateral_raise', sets: 2, reps: '12' }
+        ]
+      },
+      {
+  dayIndex: 2,
+  title: 'Back (Deload)',
+  exercises: [
+    { exerciseId: 'pull_ups', sets: 2, reps: 'AMRAP (stop early)' },
+    { exerciseId: 'lat_pulldown', sets: 2, reps: '8' }
+  ]
+},
+      {
+        dayIndex: 3,
+        title: 'Lower (Deload)',
+        exercises: [
+          { exerciseId: 'back_squat', sets: 3, reps: '6-8' },
+          { exerciseId: 'rdl', sets: 2, reps: '8' }
+        ]
+      },
+      {
+        dayIndex: 4,
+        title: 'Chest (Deload)',
+        exercises: [
+          { exerciseId: 'bench_press', sets: 3, reps: '6-8' }
+        ]
+      },
+      { dayIndex: 5, title: 'Long Run (Easy Zone 2)' },
+      { dayIndex: 6, title: 'Recovery' },
+      { dayIndex: 7, title: 'Rest' }
+    
+      ]
+    },
+      {
+  id: 'phase4',
+    name: 'Hypertrophy Wave 2',
+    startWeek: 8,
+    endWeek: 12,
+   
+  weeklyStructure: [
+
+    {
+      dayIndex: 1,
+      title: 'Shoulders Overload',
+      exercises: [
+        { exerciseId: 'shoulder_press_machine', sets: 4, reps: '6-8' },
+        { exerciseId: 'lateral_raise', sets: 4, reps: '12' },
+        { exerciseId: 'reverse_fly', sets: 3, reps: '12' },
+        { exerciseId: 'upright_row', sets: 3, reps: '10' }
+      ]
+    },
+
+    {
+  dayIndex: 2,
+  title: 'Back Density 2.0',
+  exercises: [
+
+    // FIRST EXERCISE
+    { exerciseId: 'pull_ups', sets: 4, reps: 'AMRAP' },
+
+    { exerciseId: 'barbell_row', sets: 4, reps: '6-8' },
+
+    { exerciseId: 'seated_row_wide_grip', sets: 3, reps: '10-12' },
+    { exerciseId: 'straight_arm_pulldown', sets: 3, reps: '12-15' },
+
+    { exerciseId: 'bicep_curl', sets: 3, reps: '10' }
+  ]
+},
+
+    {
+      dayIndex: 3,
+      title: 'Leg Volume Intensified',
+      exercises: [
+        { exerciseId: 'back_squat', sets: 4, reps: '6-8' },
+        { exerciseId: 'leg_press', sets: 4, reps: '10' },
+        { exerciseId: 'rdl', sets: 4, reps: '8' },
+        { exerciseId: 'walking_lunges', sets: 3, reps: '12' },
+        { exerciseId: 'quad_extension', sets: 3, reps: '15' }
+      ]
+    },
+
+    {
+      dayIndex: 4,
+      title: 'Chest + Upper',
+      exercises: [
+        { exerciseId: 'bench_press', sets: 4, reps: '6-8' },
+        { exerciseId: 'incline_dumbbell_press', sets: 4, reps: '8-10' },
+        { exerciseId: 'cable_fly', sets: 3, reps: '12-15' }
+      ]
+    },
+
+    { dayIndex: 5, title: 'Long Run' },
+    { dayIndex: 6, title: 'Recovery' },
+    { dayIndex: 7, title: 'Rest' }
+  ]
+},
+  // ================= PHASE 5 (DELOAD) =================
+  {
+    id: 'phase5',
+    name: 'Deload',
+    startWeek: 13,
+    endWeek: 13,
+    weeklyStructure: [
+      {
+        dayIndex: 1,
+        title: 'Upper (Deload)',
+        exercises: [
+          { exerciseId: 'shoulder_press_machine', sets: 3, reps: '6-8' },
+          { exerciseId: 'lateral_raise', sets: 2, reps: '12' }
+        ]
+      },
+      {
+        dayIndex: 2,
+        title: 'Back (Deload)',
+        exercises: [
+          { exerciseId: 'barbell_row', sets: 3, reps: '6-8' }
+        ]
+      },
+      {
+        dayIndex: 3,
+        title: 'Lower (Deload)',
+        exercises: [
+          { exerciseId: 'back_squat', sets: 3, reps: '5-6' }
+        ]
+      },
+      {
+        dayIndex: 4,
+        title: 'Chest (Deload)',
+        exercises: [
+          { exerciseId: 'bench_press', sets: 3, reps: '5-6' }
+        ]
+      },
+      { dayIndex: 5, title: 'Long Run (Easy)' },
+      { dayIndex: 6, title: 'Recovery' },
+      { dayIndex: 7, title: 'Rest' }
+    ]
+  },
+  {
+  id: 'phase6',
+  name: 'Strength Conversion',
+  startWeek: 14,
+  endWeek: 16,
+
+  weeklyStructure: [
+
+    // ================= SHOULDERS =================
+    {
+      dayIndex: 1,
+      title: 'Shoulder Strength Focus',
+      exercises: [
+
+        // HEAVY
+        { exerciseId: 'shoulder_press_machine', sets: 4, reps: '6-8' },
+        { exerciseId: 'upright_row', sets: 4, reps: '6-8' },
+
+        // ACCESSORY
+        { exerciseId: 'lateral_raise', sets: 4, reps: '12-15' },
+        { exerciseId: 'reverse_fly', sets: 3, reps: '12-15' }
+      ]
+    },
+
+    // ================= BACK =================
+    {
+      dayIndex: 2,
+      title: 'Back Strength + Width',
+      exercises: [
+
+        // HEAVY
+        { exerciseId: 'pull_ups', sets: 4, reps: '6-8 (add weight if needed)' },
+        { exerciseId: 'barbell_row', sets: 4, reps: '6-8' },
+
+        // ACCESSORY
+        { exerciseId: 'seated_row_wide_grip', sets: 3, reps: '10-12' },
+        { exerciseId: 'straight_arm_pulldown', sets: 3, reps: '12-15' }
+      ]
+    },
+
+    // ================= LEGS =================
+    {
+      dayIndex: 3,
+      title: 'Lower Body Strength Emphasis',
+      exercises: [
+
+        // HEAVY
+        { exerciseId: 'back_squat', sets: 4, reps: '6-8' },
+        { exerciseId: 'rdl', sets: 4, reps: '6-8' },
+
+        // ACCESSORY
+        { exerciseId: 'leg_press', sets: 3, reps: '10-12' },
+        { exerciseId: 'quad_extension', sets: 3, reps: '12-15' }
+      ]
+    },
+
+    // ================= CHEST =================
+    {
+      dayIndex: 4,
+      title: 'Chest Strength + Pump',
+      exercises: [
+
+        // HEAVY
+        { exerciseId: 'bench_press', sets: 4, reps: '6-8' },
+        { exerciseId: 'incline_dumbbell_press', sets: 4, reps: '6-8' },
+
+        // ACCESSORY
+        { exerciseId: 'cable_fly', sets: 3, reps: '12-15' },
+        { exerciseId: 'lateral_raise', sets: 3, reps: '12-15' }
+      ]
+    },
+
+    { dayIndex: 5, title: 'Long Run' },
+    { dayIndex: 6, title: 'Recovery' },
+    { dayIndex: 7, title: 'Rest' }
+  ]
+}
+]
+}
 ];
+
+
+
 export const MOCK_PROGRAMS: Program[] = [
   {
     id: '2',
