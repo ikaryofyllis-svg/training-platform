@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ViewType, UnitSystem, Session, WorkoutPlan } from './types';
-import { WORKOUT_PLANS } from './constants';
+import { WORKOUT_PLANS } from "./data/programs";
 import HomeView from './components/HomeView';
 import CalendarView from './components/CalendarView';
 import BottomNav from './components/BottomNav';
@@ -11,7 +11,7 @@ import PerformanceView from './components/PerformanceView';
 import DailyWorkoutView from './components/DailyWorkoutView';
 import LoginView from './components/LoginView';
 import ProgramIntroView from './components/ProgramIntroView';
-
+const STORAGE_KEY = "fitnessAppData_v2";
 interface AppData {
   activePlanId: string;
   programs: {
@@ -82,28 +82,27 @@ const loadInitialData = (): AppData => {
   const currentDay = programData?.currentDay ?? 1;
 
   // ✅ Generate sessions with absolute day numbers
-  const generateSessionsFromPlan = (plan: WorkoutPlan): Session[] => {
-    const generated: Session[] = [];
-    let absoluteDay = 1;
+ const generateSessionsFromPlan = (plan: WorkoutPlan): Session[] => {
+  const generated: Session[] = [];
+  let absoluteDay = 1;
 
-    plan.phases.forEach((phase) => {
-      const weeksInPhase = phase.endWeek - phase.startWeek + 1;
+  plan.phases.forEach((phase) => {
+    const weeksInPhase = phase.endWeek - phase.startWeek + 1;
 
-      for (let week = 0; week < weeksInPhase; week++) {
-        phase.weeklyStructure.forEach((day) => {
-          generated.push({
-            day: absoluteDay,
-            title: day.title,
-            exercises: day.exercises ?? [],
-            completed: false,
-          });
-          absoluteDay++;
+    for (let week = 0; week < weeksInPhase; week++) {
+      phase.weeklyStructure.forEach((day) => {
+        generated.push({
+          day: absoluteDay,
+          title: day.title,
+          blocks: day.blocks ?? []  // ✅ THIS IS THE KEY
         });
-      }
-    });
+        absoluteDay++;
+      });
+    }
+  });
 
-    return generated;
-  };
+  return generated;
+};
 
   // ✅ Ensure program exists in storage
   useEffect(() => {
@@ -357,7 +356,7 @@ const loadInitialData = (): AppData => {
             units={units}
             onBack={() => setCurrentView(ViewType.CALENDAR)}
             onComplete={handleCompleteWorkout}
-            onUpdateSession={handleUpdateSession}
+            currentDay={currentDay}
             onSaveLog={handleSaveLog}   // ✅ THIS LINE IS REQUIRED
           />
         ) : null;

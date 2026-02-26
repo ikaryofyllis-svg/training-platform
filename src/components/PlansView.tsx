@@ -1,5 +1,5 @@
 import React from 'react';
-import { WORKOUT_PLANS } from '../constants';
+import { WORKOUT_PLANS } from "../data/programs";
 import { UnitSystem } from '../types';
 
 interface PlansViewProps {

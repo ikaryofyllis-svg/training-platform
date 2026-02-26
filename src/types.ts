@@ -16,7 +16,11 @@ export interface Phase {
   name: string;
   startWeek: number;
   endWeek: number;
-  weeklyStructure: PlanDayTemplate[];
+  weeklyStructure: {
+    dayIndex: number;
+    title: string;
+    blocks?: TrainingBlock[];
+  }[];
 }
 
 export interface WorkoutPlan {
@@ -43,15 +47,45 @@ export enum UnitSystem {
   IMPERIAL = 'lbs'
 }
 
-export interface Exercise {
+export type MuscleGroup =
+  | "back"
+  | "chest"
+  | "shoulders"
+  | "biceps"
+  | "triceps"
+  | "glutes"
+  | "hamstrings"
+  | "quads"
+  | "calves";
+export interface ExerciseSet {
+  exerciseId: string;
+  sets: number;
+  reps: string;
+}
+  export interface Exercise {
   id: string;
   name: string;
-  reps: string;
-  sets: number;
+  muscleGroup: MuscleGroup;
   image: string;
   tips: string[];
-  loggedWeight?: number; 
 }
+
+export interface TrainingBlock {
+  type: TrainingBlockType;
+  label?: string; // e.g. "A1", "B1"
+  exercises?: ExerciseSet[];
+  cardio?: CardioConfig;
+}
+export interface CardioConfig {
+  mode: "steady" | "interval";
+  durationMinutes?: number;
+  intervals?: string; // e.g. "2min on / 2min off x5"
+}
+export type TrainingBlockType =
+  | "single"
+  | "superset"
+  | "giant_set"
+  | "cardio";
 
 export interface Program {
   id: string;
@@ -73,19 +107,8 @@ export interface Program {
 export interface Session {
   day: number;
   title: string;
-  status: 'completed' | 'active' | 'upcoming';
-  eexercises?: {
-  exerciseId: string;
-  sets: number;
-  reps: string;
-}[];
-  restPeriod?: string;
-  globalSets?: number;
-  loggedDistance?: number;
-  loggedTime?: string;
-  loggedPace?: string;
+  blocks: TrainingBlock[];
 }
-
 export interface LiftPoint {
   date: string;
   weightKg: number;

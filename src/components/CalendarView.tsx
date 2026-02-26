@@ -19,6 +19,11 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onOpenWorkout, currentDay, 
   // Parse duration string e.g., "12 Weeks" -> 12
   const totalWeeks = activePlan.durationWeeks;
   const totalDays = totalWeeks * 7;
+  const getSessionStatus = (session: Session) => {
+  if (session.day < currentDay) return "completed";
+  if (session.day === currentDay) return "active";
+  return "upcoming";
+};	
   const totalBlocks = Math.ceil(totalWeeks / 4);
 // 👇 ADD THESE TWO LINES RIGHT HERE
   const currentWeek = Math.ceil(currentDay / 7);
@@ -126,8 +131,9 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onOpenWorkout, currentDay, 
                   if (day === null) return <div key={`empty-${idx}`} />;
                   
                   const session = getSessionForDay(day);
-                  const isCompleted = session?.completed;
-                  const isActive = day === currentDay;
+                  const status = session ? getSessionStatus(session) : null;
+                  const isCompleted = status === "completed";
+                  const isActive = status === "active";
                   
                   
                   return (
@@ -225,7 +231,10 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onOpenWorkout, currentDay, 
                           </h4>
                           <div className="flex items-center gap-2">
                             <span className={`text-[8px] font-black uppercase tracking-[0.1em] ${isActive ? 'text-white/70' : 'text-gray-500'}`}>
-                              {session.exercises?.length || 0} Exercises
+                              {session.blocks?.reduce((count, block) => {
+                                 if (block.exercises) return count + block.exercises.length;
+                                  return count;
+                              }, 0) || 0} Exercises
                             </span>
                             {isCompleted && (
                               <span className="text-[8px] font-black text-green-500 uppercase flex items-center gap-0.5">

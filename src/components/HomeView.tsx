@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { WORKOUT_PLANS } from '../constants';
+import { WORKOUT_PLANS } from "../data/programs";
 import { ViewType, UnitSystem, Session } from '../types';
 
 interface HomeViewProps {
