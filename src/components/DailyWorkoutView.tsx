@@ -122,8 +122,14 @@ const DailyWorkoutView: React.FC<DailyWorkoutViewProps> = ({
                     <div key={exercise.id} className="mb-6">
                       <h5 className="font-bold">{exercise.name}</h5>
                       <p className="text-xs text-primary mb-2">
-                        {exerciseData.sets} sets • {exerciseData.reps}
-                      </p>
+  {exerciseData.repScheme
+    ? exerciseData.repScheme.map((rep, i) => (
+        <span key={i} className="block">
+          Set {i + 1}: {rep}
+        </span>
+      ))
+    : `${exerciseData.sets} sets • ${exerciseData.reps}`}
+</p>
 
                       <input
                         type="number"

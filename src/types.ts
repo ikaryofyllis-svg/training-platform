@@ -61,6 +61,7 @@ export interface ExerciseSet {
   exerciseId: string;
   sets: number;
   reps: string;
+  repScheme?: string[];
 }
   export interface Exercise {
   id: string;

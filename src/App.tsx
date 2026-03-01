@@ -90,14 +90,21 @@ const loadInitialData = (): AppData => {
     const weeksInPhase = phase.endWeek - phase.startWeek + 1;
 
     for (let week = 0; week < weeksInPhase; week++) {
-      phase.weeklyStructure.forEach((day) => {
+
+      // 🔥 SORT DAYS BY dayIndex
+      const sortedDays = [...phase.weeklyStructure].sort(
+        (a, b) => a.dayIndex - b.dayIndex
+      );
+
+      sortedDays.forEach((day) => {
         generated.push({
           day: absoluteDay,
           title: day.title,
-          blocks: day.blocks ?? []  // ✅ THIS IS THE KEY
+          blocks: day.blocks ?? []
         });
         absoluteDay++;
       });
+
     }
   });
 
