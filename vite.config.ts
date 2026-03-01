@@ -17,8 +17,8 @@ export default defineConfig({
 
       manifest: {
         id: '/',
-        name: 'Training Platform',
-        short_name: 'Training',
+        name: 'Elite Performance Training',
+        short_name: 'EXTrain',
         description: 'Strength & Conditioning Training App',
         theme_color: '#000000',
         background_color: '#000000',
