@@ -64,7 +64,7 @@ const PerformanceView: React.FC<PerformanceViewProps> = ({
   const getLifetimeVolume = () => {
     let total = 0;
 
-    Object.values(exerciseLogs).forEach(logArray => {
+    (Object.values(exerciseLogs) as PerformanceViewProps['exerciseLogs'][string][]).forEach(logArray => {
       logArray.forEach(log => {
         total += (log.bestWeight || 0) * (log.reps || 0) * (log.sets || 0);
       });
@@ -76,7 +76,7 @@ const PerformanceView: React.FC<PerformanceViewProps> = ({
   const getLifetimeSets = () => {
     let total = 0;
 
-    Object.values(exerciseLogs).forEach(logArray => {
+    (Object.values(exerciseLogs) as PerformanceViewProps['exerciseLogs'][string][]).forEach(logArray => {
       logArray.forEach(log => {
         total += log.sets || 0;
       });

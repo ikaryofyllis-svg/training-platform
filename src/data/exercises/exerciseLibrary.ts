@@ -797,6 +797,27 @@ export const EXERCISE_LIBRARY: Exercise[] = [
     "Explosive hip drive",
     "Catch strong at shoulders"
   ]
+},
+{
+  id: "single_arm_row",
+  name: "Single-arm Dumbbell Row",
+  muscleGroup: "back",
+  image: "",
+  tips: ["Keep hips square", "Drive elbow toward the hip"]
+},
+{
+  id: "seated_row_wide_grip",
+  name: "Wide-grip Seated Row",
+  muscleGroup: "back",
+  image: "",
+  tips: ["Keep chest tall", "Pull elbows wide without shrugging"]
+},
+{
+  id: "upright_row",
+  name: "Upright Row",
+  muscleGroup: "shoulders",
+  image: "",
+  tips: ["Lead with the elbows", "Use a comfortable range of motion"]
 }
 
 ];

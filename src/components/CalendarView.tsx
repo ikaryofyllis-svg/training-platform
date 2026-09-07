@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Session, Program } from '../types';
+import { Session, WorkoutPlan } from '../types';
 
 interface CalendarViewProps {
   onOpenWorkout: (session: Session) => void;

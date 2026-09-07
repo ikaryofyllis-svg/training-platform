@@ -1,230 +1,62 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { summarizeWorkout } from '../domain/workouts';
 import { Session, UnitSystem } from '../types';
-import { EXERCISE_LIBRARY } from '../data/exercises/exerciseLibrary';
+import WorkoutBlockRenderer from './workout/WorkoutBlockRenderer';
 
-interface DailyWorkoutViewProps {
+interface Props {
   session: Session;
   units: UnitSystem;
-  currentDay: number; // 🔥 ADD THIS
+  currentDay: number;
   onBack: () => void;
   onComplete?: () => void;
-  onSaveLog: (
-    exerciseId: string,
-    weight: number,
-    reps: number,
-    sets: number
-  ) => void;
+  onSaveLog: (exerciseId: string, weight: number, reps: number, sets: number) => void;
 }
 
-const DailyWorkoutView: React.FC<DailyWorkoutViewProps> = ({
-  session,
-  units,
-  currentDay,
-  onBack,
-  onComplete,
-  onSaveLog
-}) => {
-  console.log("SESSION:", session);
+const modeLabels = { single: 'Strength', pyramid: 'Pyramid', superset: 'Superset', giant_set: 'Giant set', cardio: 'Cardio' };
 
-  const [weightInputs, setWeightInputs] = useState<Record<string, number>>({});
-
-  const getExerciseById = (id: string) => {
-    return EXERCISE_LIBRARY.find(e => e.id === id);
-  };
-
-  const handleWeightChange = (exerciseId: string, value: number) => {
-    setWeightInputs(prev => ({
-      ...prev,
-      [exerciseId]: value
-    }));
-  };
-
-  const handleSaveExerciseLog = (
-    exerciseId: string,
-    reps: string,
-    sets: number
-  ) => {
-    const weight = weightInputs[exerciseId];
-    if (!weight) return;
-
-    onSaveLog(exerciseId, weight, parseInt(reps), sets);
-  };
-
-  const hasOnlyCardio =
-   session.blocks?.length === 1 &&
-   session.blocks?.[0]?.type === "cardio";
-  const isRestDay = session.blocks?.length === 0;
-  const isCompleted = session.day < currentDay;
+const DailyWorkoutView: React.FC<Props> = ({ session, units, currentDay, onBack, onComplete, onSaveLog }) => {
+  const isRestDay = session.blocks.length === 0;
+  const isCompleted = session.completed || session.day < currentDay;
+  const summary = summarizeWorkout(session.blocks);
 
   return (
-    <div className="animate-in slide-in-from-bottom duration-500 pb-32">
-
-      {/* HEADER */}
-      <div className="relative h-72 flex flex-col justify-end px-6 pb-10 bg-black">
-        <button
-          onClick={onBack}
-          className="absolute top-6 left-6 w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-white"
-        >
+    <div className="min-h-screen animate-in slide-in-from-bottom bg-background-light pb-32 duration-500 dark:bg-background-dark">
+      <header className="relative overflow-hidden bg-black px-6 pb-9 pt-6 text-white">
+        <div className="absolute -right-16 -top-20 h-64 w-64 rounded-full bg-primary/30 blur-3xl" />
+        <button type="button" onClick={onBack} aria-label="Back to calendar" className="relative z-10 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 transition hover:bg-white/20">
           <span className="material-symbols-outlined">arrow_back</span>
         </button>
-
-        <div className="relative z-10">
-          <h1 className="text-4xl font-black text-white">
-            Day {session.day} — {session.title}
-          </h1>
-        </div>
-      </div>
-
-      {/* BLOCK RENDERING */}
-      <section className="px-6 mt-8 space-y-6">
-         {isRestDay && (
-          <div className="bg-gray-100 dark:bg-card-dark p-10 rounded-3xl text-center">
-            <h3 className="text-xl font-black mb-2">Rest & Recovery</h3>
-            <p className="text-sm text-gray-500">
-               Focus on mobility, hydration, and recovery.
-            </p>
-           </div>
-       )}
-
-        {!isRestDay &&
-         session.blocks?.map((block, blockIndex) =>{
-
-          // CARDIO BLOCK
-          if (block.type === "cardio") {
-            return (
-              <div key={blockIndex} className="bg-blue-100 p-6 rounded-3xl">
-                <h4 className="font-black text-blue-600 mb-2">Cardio</h4>
-
-                {block.cardio?.mode === "steady" && (
-                  <p>{block.cardio.durationMinutes} min steady</p>
-                )}
-
-                {block.cardio?.mode === "interval" && (
-                  <p>{block.cardio.intervals}</p>
-                )}
-              </div>
-            );
-          }
-
-          // SUPERSET
-          if (block.type === "superset") {
-            return (
-              <div key={blockIndex} className="border-2 border-primary p-6 rounded-3xl">
-                <h4 className="font-black text-primary mb-4">
-                  Superset {block.label}
-                </h4>
-
-                {block.exercises?.map((exerciseData) => {
-                  const exercise = getExerciseById(exerciseData.exerciseId);
-                  if (!exercise) return null;
-
-                  return (
-                    <div key={exercise.id} className="mb-6">
-                      <h5 className="font-bold">{exercise.name}</h5>
-                      <p className="text-xs text-primary mb-2">
-  {exerciseData.repScheme
-    ? exerciseData.repScheme.map((rep, i) => (
-        <span key={i} className="block">
-          Set {i + 1}: {rep}
-        </span>
-      ))
-    : `${exerciseData.sets} sets • ${exerciseData.reps}`}
-</p>
-
-                      <input
-                        type="number"
-                        placeholder={`Weight (${units})`}
-                        className="w-full bg-gray-100 rounded-xl py-3 px-4 text-lg font-bold mb-2"
-                        onChange={(e) =>
-                          handleWeightChange(
-                            exercise.id,
-                            parseFloat(e.target.value)
-                          )
-                        }
-                      />
-
-                      <button
-                        onClick={() =>
-                          handleSaveExerciseLog(
-                            exercise.id,
-                            exerciseData.reps!,
-                            exerciseData.sets!
-                          )
-                        }
-                        className="w-full py-2 bg-primary text-white rounded-xl text-xs font-bold uppercase tracking-widest"
-                      >
-                        Save Log
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-            );
-          }
-
-          // SINGLE BLOCK
-          return (
-            <div key={blockIndex} className="bg-white dark:bg-card-dark p-6 rounded-3xl border">
-              {block.exercises?.map((exerciseData) => {
-                const exercise = getExerciseById(exerciseData.exerciseId);
-                if (!exercise) return null;
-
-                return (
-                  <div key={exercise.id} className="mb-6">
-                    <h5 className="font-bold">{exercise.name}</h5>
-                    <p className="text-xs text-primary mb-2">
-                      {exerciseData.sets} sets • {exerciseData.reps}
-                    </p>
-
-                    <input
-                      type="number"
-                      placeholder={`Weight (${units})`}
-                      className="w-full bg-gray-100 rounded-xl py-3 px-4 text-lg font-bold mb-2"
-                      onChange={(e) =>
-                        handleWeightChange(
-                          exercise.id,
-                          parseFloat(e.target.value)
-                        )
-                      }
-                    />
-
-                    <button
-                      onClick={() =>
-                        handleSaveExerciseLog(
-                          exercise.id,
-                          exerciseData.reps!,
-                          exerciseData.sets!
-                        )
-                      }
-                      className="w-full py-2 bg-primary text-white rounded-xl text-xs font-bold uppercase tracking-widest"
-                    >
-                      Save Log
-                    </button>
-                  </div>
-                );
-              })}
+        <div className="relative z-10 mt-10">
+          <p className="text-[10px] font-black uppercase tracking-[0.35em] text-primary">Day {session.day}</p>
+          <h1 className="mt-2 text-4xl font-black leading-none">{session.title}</h1>
+          {!isRestDay && (
+            <div className="mt-6 flex flex-wrap gap-2">
+              {summary.modes.map(mode => <span key={mode} className="rounded-full bg-white/10 px-3 py-2 text-[10px] font-black uppercase tracking-wider">{modeLabels[mode]}</span>)}
+              {summary.exerciseCount > 0 && <span className="rounded-full bg-white/10 px-3 py-2 text-[10px] font-black uppercase tracking-wider">{summary.exerciseCount} exercises · {summary.workingSets} sets</span>}
             </div>
-          );
-        })}
-      </section>
+          )}
+        </div>
+      </header>
 
-      {/* COMPLETE BUTTON */}
+      <main className="space-y-6 px-5 pt-6">
+        {isRestDay ? (
+          <section className="rounded-[32px] bg-white p-8 text-center shadow-sm dark:bg-card-dark">
+            <span className="material-symbols-outlined text-5xl text-primary">self_improvement</span>
+            <h2 className="mt-4 text-2xl font-black">Rest & recovery</h2>
+            <p className="mx-auto mt-2 max-w-xs text-sm leading-relaxed text-gray-500">Recover today. Prioritize sleep, hydration, food, and light mobility.</p>
+          </section>
+        ) : session.blocks.map((block, blockIndex) => (
+          <WorkoutBlockRenderer key={`${block.type}-${blockIndex}`} block={block} blockIndex={blockIndex} units={units} onSave={onSaveLog} />
+        ))}
+      </main>
+
       {onComplete && (
-        <section className="px-6 mt-10">
-          <button
-            onClick={onComplete}
-            disabled={isCompleted}
-            className={`w-full py-4 rounded-2xl font-black uppercase transition-all ${
-              isCompleted
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'bg-primary text-white hover:bg-red-600'
-            }`}
-          >
-            {isCompleted ? 'Workout Completed' : 'Complete Workout'}
+        <div className="fixed bottom-0 left-1/2 z-20 w-full max-w-md -translate-x-1/2 bg-gradient-to-t from-background-light via-background-light px-5 pb-6 pt-8 dark:from-background-dark dark:via-background-dark">
+          <button type="button" onClick={onComplete} disabled={isCompleted} className={`w-full rounded-2xl py-4 font-black uppercase tracking-wider transition ${isCompleted ? 'cursor-not-allowed bg-gray-300 text-gray-500 dark:bg-white/10' : 'bg-primary text-white shadow-xl shadow-primary/25 hover:bg-red-700'}`}>
+            {isCompleted ? 'Day completed' : isRestDay ? 'Complete recovery day' : 'Complete workout'}
           </button>
-        </section>
+        </div>
       )}
-
     </div>
   );
 };

@@ -11,6 +11,7 @@ import PerformanceView from './components/PerformanceView';
 import DailyWorkoutView from './components/DailyWorkoutView';
 import LoginView from './components/LoginView';
 import ProgramIntroView from './components/ProgramIntroView';
+import { normalizeWorkoutDay } from './domain/workouts';
 const STORAGE_KEY = "fitnessAppData_v2";
 interface AppData {
   activePlanId: string;
@@ -40,7 +41,7 @@ const App: React.FC = () => {
   const [selectedSessionId, setSelectedSessionId] = useState<number | null>(null);
   const [viewingProgramId, setViewingProgramId] = useState<string | null>(null);
 
-  const STORAGE_KEY = "fitnessAppData_v1";
+  
 
 const loadInitialData = (): AppData => {
   try {
@@ -74,6 +75,8 @@ const loadInitialData = (): AppData => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
 }, [appData]);
   const activePlanId = appData.activePlanId;
+console.log("WORKOUT_PLANS:", WORKOUT_PLANS);
+console.log("Active Plan ID:", activePlanId);
   const activePlan = WORKOUT_PLANS.find(p => p.id === activePlanId);
   if (!activePlan) return null;
 
@@ -100,7 +103,7 @@ const loadInitialData = (): AppData => {
         generated.push({
           day: absoluteDay,
           title: day.title,
-          blocks: day.blocks ?? []
+          blocks: normalizeWorkoutDay(day)
         });
         absoluteDay++;
       });
