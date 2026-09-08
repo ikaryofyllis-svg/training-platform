@@ -9,10 +9,10 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: "#d02525",
-        "background-light": "#f8f6f6",
-        "background-dark": "#170a0a",
-        "card-dark": "#2a1a1a",
+        primary: "rgb(var(--color-primary) / <alpha-value>)",
+        "background-light": "rgb(var(--color-background-light) / <alpha-value>)",
+        "background-dark": "rgb(var(--color-background-dark) / <alpha-value>)",
+        "card-dark": "rgb(var(--color-card-dark) / <alpha-value>)",
       },
       fontFamily: {
         manrope: ["Manrope", "sans-serif"],

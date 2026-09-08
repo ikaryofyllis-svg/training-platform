@@ -2,6 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
+:root,
+[data-theme="forge"] {
+  --color-primary: 208 37 37;
+  --color-background-light: 248 246 246;
+  --color-background-dark: 17 17 19;
+  --color-card-dark: 35 35 39;
+  --theme-glow: rgba(208, 37, 37, 0.22);
+}
+
+[data-theme="ascend"] {
+  --color-primary: 79 113 255;
+  --color-background-light: 245 247 255;
+  --color-background-dark: 8 12 32;
+  --color-card-dark: 20 26 57;
+  --theme-glow: rgba(92, 112, 255, 0.3);
+}
+
+[data-theme="bloom"] {
+  --color-primary: 93 128 103;
+  --color-background-light: 249 246 238;
+  --color-background-dark: 25 35 29;
+  --color-card-dark: 42 55 46;
+  --theme-glow: rgba(109, 145, 117, 0.25);
+}
+
+html, body, #root { min-height: 100%; }
+body { margin: 0; background: rgb(var(--color-background-light)); }
+.theme-root { background: rgb(var(--color-background-light)); color: #151518; }
+.dark .theme-root { background: rgb(var(--color-background-dark)); color: white; }
+.theme-glow { box-shadow: 0 24px 70px var(--theme-glow); }
+
 .material-symbols-outlined {
   font-variation-settings: 
     'FILL' 0,

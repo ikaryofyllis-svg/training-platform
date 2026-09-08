@@ -10,6 +10,17 @@ export enum ViewType {
 
 export enum UnitSystem { METRIC = 'kg', IMPERIAL = 'lbs' }
 
+export type VisualThemeId = 'forge' | 'ascend' | 'bloom';
+export type TrainingContext = 'general' | 'prenatal' | 'postpartum';
+export type TrainingGoal = 'strength' | 'conditioning' | 'hypertrophy' | 'mobility';
+
+export interface UserPreferences {
+  onboardingCompleted: boolean;
+  visualTheme: VisualThemeId;
+  trainingContext: TrainingContext;
+  goals: TrainingGoal[];
+}
+
 export type MuscleGroup = 'back' | 'chest' | 'shoulders' | 'biceps' | 'triceps'
   | 'glutes' | 'hamstrings' | 'quads' | 'calves' | 'lower_body' | 'core'
   | 'conditioning' | 'power' | 'recovery';

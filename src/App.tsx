@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CardioLog, CardioLogInput, ViewType, UnitSystem, Session, WorkoutPlan } from './types';
+import { CardioLog, CardioLogInput, TrainingContext, TrainingGoal, UserPreferences, ViewType, VisualThemeId, UnitSystem, Session, WorkoutPlan } from './types';
 import { WORKOUT_PLANS } from "./data/programs";
 import HomeView from './components/HomeView';
 import CalendarView from './components/CalendarView';
@@ -11,6 +11,8 @@ import PerformanceView from './components/PerformanceView';
 import DailyWorkoutView from './components/DailyWorkoutView';
 import LoginView from './components/LoginView';
 import ProgramIntroView from './components/ProgramIntroView';
+import OnboardingView from './components/OnboardingView';
+import SpecializedTrackView from './components/SpecializedTrackView';
 import { normalizeWorkoutDay } from './domain/workouts';
 import { loadCloudState, saveCloudState } from './services/cloudState';
 import { signInWithGoogle, supabase } from './services/supabase';
@@ -33,20 +35,30 @@ interface AppData {
     }[];
   };
   cardioLogs: CardioLog[];
+  preferences: UserPreferences;
 }
+
+const defaultPreferences: UserPreferences = {
+  onboardingCompleted: false,
+  visualTheme: 'forge',
+  trainingContext: 'general',
+  goals: ['strength']
+};
 
 const emptyAppData = (): AppData => ({
   activePlanId: 'femme-fatale',
   programs: {},
   exerciseLogs: {},
-  cardioLogs: []
+  cardioLogs: [],
+  preferences: defaultPreferences
 });
 
 const normalizeAppData = (data: Partial<AppData>): AppData => ({
   activePlanId: data.activePlanId || 'femme-fatale',
   programs: data.programs || {},
   exerciseLogs: data.exerciseLogs || {},
-  cardioLogs: data.cardioLogs || []
+  cardioLogs: data.cardioLogs || [],
+  preferences: { ...defaultPreferences, ...(data.preferences || {}) }
 });
 
 const App: React.FC = () => {
@@ -387,6 +399,18 @@ console.log("Active Plan ID:", activePlanId);
     setViewingProgramId(null);
   };
 
+  const handleCompleteOnboarding = (preferences: UserPreferences) => {
+    setAppData(prev => ({ ...prev, preferences }));
+    setCurrentView(ViewType.HOME);
+  };
+
+  const updatePreferences = (changes: Partial<UserPreferences>) => {
+    setAppData(prev => ({
+      ...prev,
+      preferences: { ...prev.preferences, ...changes }
+    }));
+  };
+
   const handleViewIntro = (id: string) => {
     setViewingProgramId(id);
     setCurrentView(ViewType.PROGRAM_INTRO);
@@ -425,6 +449,10 @@ console.log("Active Plan ID:", activePlanId);
     return <LoginView onGoogleLogin={handleGoogleLogin} error={authError} />;
   }
 
+  if (!appData.preferences.onboardingCompleted) {
+    return <OnboardingView onComplete={handleCompleteOnboarding} />;
+  }
+
   // ========================
   // RENDER
   // ========================
@@ -440,10 +468,14 @@ console.log("Active Plan ID:", activePlanId);
             units={units}
             sessions={sessions}
             onOpenSettings={() => setIsSettingsOpen(true)}
+            preferences={appData.preferences}
           />
         );
 
       case ViewType.CALENDAR:
+        if (appData.preferences.trainingContext !== 'general') {
+          return <SpecializedTrackView context={appData.preferences.trainingContext} onOpenSettings={() => setIsSettingsOpen(true)} />;
+        }
         return (
           <CalendarView
             onOpenWorkout={handleOpenWorkout}
@@ -456,6 +488,9 @@ console.log("Active Plan ID:", activePlanId);
         );
 
       case ViewType.PLANS:
+        if (appData.preferences.trainingContext !== 'general') {
+          return <SpecializedTrackView context={appData.preferences.trainingContext} onOpenSettings={() => setIsSettingsOpen(true)} />;
+        }
         return (
           <PlansView
             activePlanId={activePlanId}
@@ -508,7 +543,7 @@ console.log("Active Plan ID:", activePlanId);
   };
 
   return (
-    <div className="flex flex-col min-h-screen max-w-md mx-auto">
+    <div data-theme={appData.preferences.visualTheme} className="theme-root flex min-h-screen max-w-md flex-col mx-auto">
       <main className="flex-1 overflow-y-auto pb-24">
         {renderView()}
       </main>
@@ -527,6 +562,12 @@ console.log("Active Plan ID:", activePlanId);
         userName={userProfile?.name}
         userEmail={userProfile?.email}
         userAvatar={userProfile?.avatar}
+        visualTheme={appData.preferences.visualTheme}
+        trainingContext={appData.preferences.trainingContext}
+        goals={appData.preferences.goals}
+        onVisualThemeChange={(visualTheme: VisualThemeId) => updatePreferences({ visualTheme })}
+        onTrainingContextChange={(trainingContext: TrainingContext) => updatePreferences({ trainingContext })}
+        onGoalsChange={(goals: TrainingGoal[]) => updatePreferences({ goals })}
       />
     </div>
   );

@@ -13,7 +13,7 @@ export default defineConfig({
   	cleanupOutdatedCaches: true,
   	clientsClaim: true,
   	skipWaiting: true,
-  	globPatterns: ['**/*.{js,css,html,png,svg,ico}']
+  	globPatterns: ['**/*.{js,css,html,png,jpg,jpeg,webp,svg,ico}']
      },
 
       manifest: {

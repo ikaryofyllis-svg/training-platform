@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { UnitSystem } from '../types';
+import { TrainingContext, TrainingGoal, UnitSystem, VisualThemeId } from '../types';
+import { TRAINING_CONTEXTS, TRAINING_GOALS, VISUAL_THEMES } from '../theme/themes';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -11,15 +12,21 @@ interface SettingsModalProps {
   userName?: string;
   userEmail?: string;
   userAvatar?: string;
+  visualTheme: VisualThemeId;
+  trainingContext: TrainingContext;
+  goals: TrainingGoal[];
+  onVisualThemeChange: (theme: VisualThemeId) => void;
+  onTrainingContextChange: (context: TrainingContext) => void;
+  onGoalsChange: (goals: TrainingGoal[]) => void;
 }
 
-const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, units, onUnitChange, onLogout, userName = 'Athlete', userEmail = '', userAvatar }) => {
+const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, units, onUnitChange, onLogout, userName = 'Athlete', userEmail = '', userAvatar, visualTheme, trainingContext, goals, onVisualThemeChange, onTrainingContextChange, onGoalsChange }) => {
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-[100] flex items-end justify-center">
       <div className="absolute inset-0 bg-black/80 backdrop-blur-md" onClick={onClose}></div>
-      <div className="relative w-full max-w-md bg-white dark:bg-card-dark rounded-t-[48px] p-10 animate-in slide-in-from-bottom duration-500 shadow-[0_-20px_60px_rgba(0,0,0,0.5)] border-t border-white/5">
+      <div className="relative max-h-[92vh] w-full max-w-md overflow-y-auto bg-white dark:bg-card-dark rounded-t-[48px] p-8 animate-in slide-in-from-bottom duration-500 shadow-[0_-20px_60px_rgba(0,0,0,0.5)] border-t border-white/5">
         <div className="w-16 h-1.5 bg-gray-200 dark:bg-white/10 rounded-full mx-auto mb-10"></div>
         
         <div className="flex items-center gap-6 mb-12">
@@ -34,6 +41,35 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, units, o
         </div>
 
         <div className="space-y-10">
+          <section>
+            <h4 className="mb-4 text-[10px] font-black uppercase tracking-[0.4em] text-primary/60">Visual world</h4>
+            <div className="grid grid-cols-3 gap-2">
+              {VISUAL_THEMES.map(theme => (
+                <button key={theme.id} type="button" onClick={() => onVisualThemeChange(theme.id)} className={`overflow-hidden rounded-2xl border-2 text-left ${visualTheme === theme.id ? 'border-primary' : 'border-transparent'}`}>
+                  <img src={theme.heroImage} alt="" className="h-20 w-full object-cover" />
+                  <span className="block px-2 py-2 text-center text-[9px] font-black uppercase">{theme.name}</span>
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <section>
+            <h4 className="mb-4 text-[10px] font-black uppercase tracking-[0.4em] text-primary/60">Training profile</h4>
+            <div className="space-y-2">{TRAINING_CONTEXTS.map(item => (
+              <button key={item.id} type="button" onClick={() => onTrainingContextChange(item.id)} className={`flex w-full items-center gap-3 rounded-2xl border p-3 text-left ${trainingContext === item.id ? 'border-primary bg-primary/5' : 'border-gray-100'}`}>
+                <span className="material-symbols-outlined text-primary">{item.icon}</span><span className="text-xs font-black">{item.name}</span>
+              </button>
+            ))}</div>
+          </section>
+
+          <section>
+            <h4 className="mb-4 text-[10px] font-black uppercase tracking-[0.4em] text-primary/60">Goals</h4>
+            <div className="flex flex-wrap gap-2">{TRAINING_GOALS.map(item => {
+              const selected = goals.includes(item.id);
+              return <button key={item.id} type="button" onClick={() => onGoalsChange(selected ? goals.filter(goal => goal !== item.id) : [...goals, item.id])} className={`rounded-full px-4 py-2 text-[10px] font-black ${selected ? 'bg-primary text-white' : 'bg-gray-100 text-gray-500'}`}>{item.name}</button>;
+            })}</div>
+          </section>
+
           <section>
             <div className="flex items-center justify-between mb-5">
               <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60">Biometric Units</h4>

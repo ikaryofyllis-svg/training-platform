@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { WORKOUT_PLANS } from "../data/programs";
-import { ViewType, UnitSystem, Session } from '../types';
+import { ViewType, UnitSystem, Session, UserPreferences } from '../types';
+import { getVisualTheme, TRAINING_CONTEXTS } from '../theme/themes';
 
 interface HomeViewProps {
   onNavigate: (view: ViewType, payload?: string) => void;
@@ -9,6 +10,7 @@ interface HomeViewProps {
   units: UnitSystem;
   sessions?: Session[]; // optional for safety
   onOpenSettings: () => void;
+  preferences: UserPreferences;
 }
 
 const HomeView: React.FC<HomeViewProps> = ({
@@ -17,12 +19,16 @@ const HomeView: React.FC<HomeViewProps> = ({
   activePlanId,
   units,
   sessions = [], // default to empty array
-  onOpenSettings
+  onOpenSettings,
+  preferences
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
   const activePlan = WORKOUT_PLANS.find(p => p.id === activePlanId);
   if (!activePlan) return null;
+  const visualTheme = getVisualTheme(preferences.visualTheme);
+  const trainingContext = TRAINING_CONTEXTS.find(item => item.id === preferences.trainingContext);
+  const hasSpecializedProfile = preferences.trainingContext !== 'general';
 
   // ✅ Safe completion calculation
   const totalSessions = sessions.length;
@@ -68,15 +74,15 @@ const HomeView: React.FC<HomeViewProps> = ({
         </button>
       </header>
 
-    {/* Active Plan Card */}
+      {/* Personalized identity card */}
 <section className="px-6 mt-6">
   <div className="relative rounded-[36px] overflow-hidden shadow-2xl min-h-[300px]">
 
     {/* Background Image */}
     <img
-      src={activePlan.image}
-      alt={activePlan.name}
-      className="absolute inset-0 w-full h-full object-cover grayscale brightness-75"
+      src={visualTheme.heroImage}
+      alt=""
+      className="absolute inset-0 w-full h-full object-cover brightness-75"
     />
 
     {/* Dark Overlay */}
@@ -85,13 +91,14 @@ const HomeView: React.FC<HomeViewProps> = ({
     {/* Content */}
     <div className="relative z-10 p-8 text-white">
 
+      <p className="mb-3 text-[10px] font-black uppercase tracking-[0.3em] text-primary">{visualTheme.name} · {trainingContext?.name}</p>
       <div className="flex justify-between items-start mb-6">
         <div>
           <h3 className="text-3xl font-black uppercase italic tracking-tight">
-            {activePlan.name}
+            {hasSpecializedProfile ? trainingContext?.name : activePlan.name}
           </h3>
           <p className="text-sm font-bold uppercase tracking-widest text-red-400 mt-1">
-            {activePlan.goalType}
+            {hasSpecializedProfile ? 'Specialized program track' : activePlan.goalType}
           </p>
         </div>
 
@@ -106,6 +113,9 @@ const HomeView: React.FC<HomeViewProps> = ({
       </div>
 
       {/* Progress Bar */}
+      {hasSpecializedProfile ? (
+        <div className="rounded-2xl border border-white/20 bg-black/30 p-4 text-sm leading-relaxed text-white/80">Your visual world is active. The specialized plan library is being prepared and general plans are not recommended automatically.</div>
+      ) : <>
       <div className="w-full bg-white/20 h-3 rounded-full overflow-hidden">
         <div
           className="bg-red-500 h-full transition-all duration-500"
@@ -116,13 +126,15 @@ const HomeView: React.FC<HomeViewProps> = ({
       <div className="mt-3 text-xs uppercase opacity-80">
         {completedSessions} / {totalSessions} Sessions Completed
       </div>
+      </>}
 
       <div className="mt-8 flex gap-4">
         <button
           onClick={() => onNavigate(ViewType.CALENDAR)}
-          className="flex-1 bg-red-600 hover:bg-red-700 transition py-4 rounded-2xl font-black uppercase tracking-wide"
+          disabled={hasSpecializedProfile}
+          className="flex-1 bg-primary hover:brightness-110 transition py-4 rounded-2xl font-black uppercase tracking-wide disabled:cursor-not-allowed disabled:opacity-50"
         >
-          Continue
+          {hasSpecializedProfile ? 'Plans in review' : 'Continue'}
         </button>
 
         <button
@@ -167,13 +179,13 @@ const HomeView: React.FC<HomeViewProps> = ({
 </div>
 
 
-  {filteredPrograms.length === 0 && (
+  {(hasSpecializedProfile || filteredPrograms.length === 0) && (
     <div className="text-center opacity-40 py-10">
-      No other programs available
+      {hasSpecializedProfile ? 'Specialized recommendations are coming next' : 'No other programs available'}
     </div>
   )}
 
-  {filteredPrograms.map(program => (
+  {!hasSpecializedProfile && filteredPrograms.map(program => (
     <div
       key={program.id}
       onClick={() => onViewIntro(program.id)}
