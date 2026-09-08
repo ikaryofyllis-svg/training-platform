@@ -12,6 +12,8 @@ import DailyWorkoutView from './components/DailyWorkoutView';
 import LoginView from './components/LoginView';
 import ProgramIntroView from './components/ProgramIntroView';
 import { normalizeWorkoutDay } from './domain/workouts';
+import { loadCloudState, saveCloudState } from './services/cloudState';
+import { signInWithGoogle, supabase } from './services/supabase';
 const STORAGE_KEY = "fitnessAppData_v2";
 interface AppData {
   activePlanId: string;
@@ -40,9 +42,21 @@ const emptyAppData = (): AppData => ({
   cardioLogs: []
 });
 
+const normalizeAppData = (data: Partial<AppData>): AppData => ({
+  activePlanId: data.activePlanId || 'femme-fatale',
+  programs: data.programs || {},
+  exerciseLogs: data.exerciseLogs || {},
+  cardioLogs: data.cardioLogs || []
+});
+
 const App: React.FC = () => {
 
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [authError, setAuthError] = useState('');
+  const [userId, setUserId] = useState<string | null>(null);
+  const [userProfile, setUserProfile] = useState<{ name: string; email: string; avatar?: string } | null>(null);
+  const [cloudReady, setCloudReady] = useState(false);
   const [currentView, setCurrentView] = useState<ViewType>(ViewType.HOME);
   const [units, setUnits] = useState<UnitSystem>(UnitSystem.METRIC);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -60,12 +74,7 @@ const loadInitialData = (): AppData => {
     }
 
     const parsed = JSON.parse(stored) as Partial<AppData>;
-    return {
-      activePlanId: parsed.activePlanId || 'femme-fatale',
-      programs: parsed.programs || {},
-      exerciseLogs: parsed.exerciseLogs || {},
-      cardioLogs: parsed.cardioLogs || []
-    };
+    return normalizeAppData(parsed);
   } catch (error) {
     console.error("Storage corrupted. Resetting...");
     localStorage.removeItem(STORAGE_KEY);
@@ -97,9 +106,70 @@ const loadInitialData = (): AppData => {
 
   // ✅ Persist everything
   const [appData, setAppData] = useState<AppData>(loadInitialData);
+
   useEffect(() => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
-}, [appData]);
+    supabase.auth.getSession().then(({ data }) => {
+      const session = data.session;
+      setUserId(session?.user.id || null);
+      setUserProfile(session ? {
+        name: session.user.user_metadata.full_name || session.user.user_metadata.name || 'Athlete',
+        email: session.user.email || '',
+        avatar: session.user.user_metadata.avatar_url
+      } : null);
+      setIsAuthenticated(Boolean(session));
+      setAuthLoading(false);
+    });
+
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUserId(session?.user.id || null);
+      setUserProfile(session ? {
+        name: session.user.user_metadata.full_name || session.user.user_metadata.name || 'Athlete',
+        email: session.user.email || '',
+        avatar: session.user.user_metadata.avatar_url
+      } : null);
+      setIsAuthenticated(Boolean(session));
+      setAuthLoading(false);
+      setCloudReady(false);
+    });
+
+    return () => authListener.subscription.unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (!userId) return;
+    let cancelled = false;
+
+    const initializeCloud = async () => {
+      const result = await loadCloudState<AppData>(userId);
+      if (cancelled) return;
+
+      if (result.status === 'found') {
+        setAppData(normalizeAppData(result.data));
+      } else if (result.status === 'empty') {
+        await saveCloudState(userId, appData);
+      } else {
+        console.warn('Cloud sync unavailable; continuing with local data:', result.message);
+      }
+      if (!cancelled) setCloudReady(true);
+    };
+
+    initializeCloud();
+    return () => { cancelled = true; };
+  }, [userId]);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+  }, [appData]);
+
+  useEffect(() => {
+    if (!userId || !cloudReady) return;
+    const timeout = window.setTimeout(() => {
+      saveCloudState(userId, appData).catch(error => {
+        console.warn('Cloud backup failed; local data is still safe:', error);
+      });
+    }, 700);
+    return () => window.clearTimeout(timeout);
+  }, [appData, cloudReady, userId]);
   const activePlanId = appData.activePlanId;
 console.log("WORKOUT_PLANS:", WORKOUT_PLANS);
 console.log("Active Plan ID:", activePlanId);
@@ -322,8 +392,21 @@ console.log("Active Plan ID:", activePlanId);
     setCurrentView(ViewType.PROGRAM_INTRO);
   };
 
-  const handleLogout = () => {
+  const handleGoogleLogin = async () => {
+    setAuthError('');
+    try {
+      await signInWithGoogle();
+    } catch (error) {
+      setAuthError(error instanceof Error ? error.message : 'Google sign-in could not start.');
+    }
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setUserId(null);
+    setUserProfile(null);
     setIsAuthenticated(false);
+    setCloudReady(false);
     setIsSettingsOpen(false);
     setCurrentView(ViewType.HOME);
   };
@@ -334,8 +417,12 @@ console.log("Active Plan ID:", activePlanId);
   );
   const introProgram = WORKOUT_PLANS.find(p => p.id === viewingProgramId);
 
+  if (authLoading) {
+    return <div className="flex min-h-screen items-center justify-center bg-background-dark text-xs font-black uppercase tracking-[0.3em] text-white/50">Loading account…</div>;
+  }
+
   if (!isAuthenticated) {
-    return <LoginView onLogin={() => setIsAuthenticated(true)} />;
+    return <LoginView onGoogleLogin={handleGoogleLogin} error={authError} />;
   }
 
   // ========================
@@ -437,6 +524,9 @@ console.log("Active Plan ID:", activePlanId);
         units={units}
         onUnitChange={setUnits}
         onLogout={handleLogout}
+        userName={userProfile?.name}
+        userEmail={userProfile?.email}
+        userAvatar={userProfile?.avatar}
       />
     </div>
   );

@@ -8,9 +8,12 @@ interface SettingsModalProps {
   units: UnitSystem;
   onUnitChange: (units: UnitSystem) => void;
   onLogout?: () => void;
+  userName?: string;
+  userEmail?: string;
+  userAvatar?: string;
 }
 
-const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, units, onUnitChange, onLogout }) => {
+const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, units, onUnitChange, onLogout, userName = 'Athlete', userEmail = '', userAvatar }) => {
   if (!isOpen) return null;
 
   return (
@@ -20,13 +23,13 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, units, o
         <div className="w-16 h-1.5 bg-gray-200 dark:bg-white/10 rounded-full mx-auto mb-10"></div>
         
         <div className="flex items-center gap-6 mb-12">
-          <div className="w-20 h-20 rounded-[28px] bg-primary flex items-center justify-center text-white text-4xl font-black border-4 border-primary/20 italic shadow-2xl shadow-primary/30">
-            AR
+          <div className="w-20 h-20 rounded-[28px] bg-primary flex items-center justify-center overflow-hidden text-white text-2xl font-black border-4 border-primary/20 italic shadow-2xl shadow-primary/30">
+            {userAvatar ? <img src={userAvatar} alt="" className="h-full w-full object-cover" referrerPolicy="no-referrer" /> : userName.split(' ').map(part => part[0]).join('').slice(0, 2).toUpperCase()}
           </div>
           <div>
-            <h3 className="text-2xl font-black uppercase tracking-tight italic leading-none mb-1">Alex Rivera</h3>
-            <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-2">OPERATOR_BX_94</p>
-            <p className="text-xs font-bold opacity-30 lowercase tracking-tight">a.rivera@beaxst.io</p>
+            <h3 className="text-2xl font-black uppercase tracking-tight italic leading-none mb-1">{userName}</h3>
+            <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-2">Cloud sync active</p>
+            <p className="text-xs font-bold opacity-30 lowercase tracking-tight">{userEmail}</p>
           </div>
         </div>
 
