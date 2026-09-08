@@ -14,6 +14,10 @@ export enum UnitSystem { METRIC = 'kg', IMPERIAL = 'lbs' }
 export type VisualThemeId = 'forge' | 'ascend' | 'bloom';
 export type TrainingContext = 'general' | 'prenatal' | 'postpartum' | 'post_injury';
 export type TrainingGoal = 'strength' | 'conditioning' | 'hypertrophy' | 'mobility';
+export type InjuryGroup = 'knee' | 'ankle_foot' | 'hip' | 'shoulder' | 'elbow' | 'wrist_hand' | 'back_neck' | 'other';
+export type RehabStage = 'protect' | 'mobility' | 'activation' | 'strength' | 'impact' | 'return_to_sport';
+export type RehabEquipment = 'bodyweight' | 'assisted' | 'band' | 'roller' | 'free_weight' | 'machine' | 'ball' | 'step';
+export type RehabFunction = 'pain_relief' | 'range_of_motion' | 'neural_activation' | 'stability' | 'strength' | 'balance' | 'lateral_movement' | 'plyometrics';
 
 export interface UserPreferences {
   onboardingCompleted: boolean;
@@ -37,6 +41,22 @@ export interface Exercise {
   reps?: string;
   /** @deprecated Library prescriptions are retained during data migration. */
   sets?: number;
+}
+
+/** Searchable, clinician-guided recovery movement. It deliberately contains no automatic dosage. */
+export interface RehabExercise {
+  id: string;
+  name: string;
+  description: string;
+  muscleGroups: MuscleGroup[];
+  injuryGroups: InjuryGroup[];
+  stages: RehabStage[];
+  equipment: RehabEquipment[];
+  functions: RehabFunction[];
+  keywords: string[];
+  clinicianClearance?: boolean;
+  custom?: boolean;
+  clinicianInstructions?: string;
 }
 
 /** An exercise prescription inside one workout block. */

@@ -29,6 +29,7 @@ const HomeView: React.FC<HomeViewProps> = ({
   const visualTheme = getVisualTheme(preferences.visualTheme);
   const trainingContext = TRAINING_CONTEXTS.find(item => item.id === preferences.trainingContext);
   const hasSpecializedProfile = preferences.trainingContext !== 'general';
+  const isPostInjury = preferences.trainingContext === 'post_injury';
 
   // ✅ Safe completion calculation
   const totalSessions = sessions.length;
@@ -130,11 +131,11 @@ const HomeView: React.FC<HomeViewProps> = ({
 
       <div className="mt-8 flex gap-4">
         <button
-          onClick={() => onNavigate(ViewType.CALENDAR)}
-          disabled={hasSpecializedProfile}
+          onClick={() => onNavigate(isPostInjury ? ViewType.PLANS : ViewType.CALENDAR)}
+          disabled={hasSpecializedProfile && !isPostInjury}
           className="flex-1 bg-primary hover:brightness-110 transition py-4 rounded-2xl font-black uppercase tracking-wide disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {hasSpecializedProfile ? 'Plans in review' : visualTheme.copy.continueWorkout}
+          {isPostInjury ? 'Open recovery library' : hasSpecializedProfile ? 'Plans in review' : visualTheme.copy.continueWorkout}
         </button>
 
         <button

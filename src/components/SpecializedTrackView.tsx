@@ -1,8 +1,22 @@
 import React from 'react';
-import { TrainingContext } from '../types';
+import { RehabExercise, TrainingContext } from '../types';
 import { TRAINING_CONTEXTS } from '../theme/themes';
+import InjuryReturnView from './InjuryReturnView';
 
-const SpecializedTrackView: React.FC<{ context: TrainingContext; onOpenSettings: () => void }> = ({ context, onOpenSettings }) => {
+interface SpecializedTrackViewProps {
+  context: TrainingContext;
+  onOpenSettings: () => void;
+  selectedExerciseIds: string[];
+  customExercises: RehabExercise[];
+  onToggleExercise: (id: string) => void;
+  onAddCustomExercise: (exercise: Omit<RehabExercise, 'id' | 'custom'>) => void;
+  onDeleteCustomExercise: (id: string) => void;
+}
+
+const SpecializedTrackView: React.FC<SpecializedTrackViewProps> = ({ context, onOpenSettings, selectedExerciseIds, customExercises, onToggleExercise, onAddCustomExercise, onDeleteCustomExercise }) => {
+  if (context === 'post_injury') {
+    return <InjuryReturnView selectedExerciseIds={selectedExerciseIds} customExercises={customExercises} onToggleExercise={onToggleExercise} onAddCustomExercise={onAddCustomExercise} onDeleteCustomExercise={onDeleteCustomExercise} />;
+  }
   const profile = TRAINING_CONTEXTS.find(item => item.id === context);
   return (
     <div className="px-6 pb-32 pt-12">

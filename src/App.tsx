@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CardioLog, CardioLogInput, TrainingContext, TrainingGoal, UserPreferences, ViewType, VisualThemeId, UnitSystem, Session, WorkoutPlan } from './types';
+import { CardioLog, CardioLogInput, RehabExercise, TrainingContext, TrainingGoal, UserPreferences, ViewType, VisualThemeId, UnitSystem, Session, WorkoutPlan } from './types';
 import { WORKOUT_PLANS } from "./data/programs";
 import HomeView from './components/HomeView';
 import CalendarView from './components/CalendarView';
@@ -36,6 +36,10 @@ interface AppData {
     }[];
   };
   cardioLogs: CardioLog[];
+  rehab: {
+    selectedExerciseIds: string[];
+    customExercises: RehabExercise[];
+  };
   preferences: UserPreferences;
 }
 
@@ -51,6 +55,7 @@ const emptyAppData = (): AppData => ({
   programs: {},
   exerciseLogs: {},
   cardioLogs: [],
+  rehab: { selectedExerciseIds: [], customExercises: [] },
   preferences: defaultPreferences
 });
 
@@ -59,6 +64,10 @@ const normalizeAppData = (data: Partial<AppData>): AppData => ({
   programs: data.programs || {},
   exerciseLogs: data.exerciseLogs || {},
   cardioLogs: data.cardioLogs || [],
+  rehab: {
+    selectedExerciseIds: data.rehab?.selectedExerciseIds || [],
+    customExercises: data.rehab?.customExercises || []
+  },
   preferences: { ...defaultPreferences, ...(data.preferences || {}) }
 });
 
@@ -405,6 +414,42 @@ console.log("Active Plan ID:", activePlanId);
     setCurrentView(ViewType.HOME);
   };
 
+  const handleToggleRehabExercise = (id: string) => {
+    setAppData(prev => {
+      const selected = prev.rehab.selectedExerciseIds.includes(id);
+      return {
+        ...prev,
+        rehab: {
+          ...prev.rehab,
+          selectedExerciseIds: selected
+            ? prev.rehab.selectedExerciseIds.filter(exerciseId => exerciseId !== id)
+            : [...prev.rehab.selectedExerciseIds, id]
+        }
+      };
+    });
+  };
+
+  const handleAddCustomRehabExercise = (exercise: Omit<RehabExercise, 'id' | 'custom'>) => {
+    const id = `custom_${crypto.randomUUID()}`;
+    setAppData(prev => ({
+      ...prev,
+      rehab: {
+        customExercises: [{ ...exercise, id, custom: true }, ...prev.rehab.customExercises],
+        selectedExerciseIds: [id, ...prev.rehab.selectedExerciseIds]
+      }
+    }));
+  };
+
+  const handleDeleteCustomRehabExercise = (id: string) => {
+    setAppData(prev => ({
+      ...prev,
+      rehab: {
+        customExercises: prev.rehab.customExercises.filter(exercise => exercise.id !== id),
+        selectedExerciseIds: prev.rehab.selectedExerciseIds.filter(exerciseId => exerciseId !== id)
+      }
+    }));
+  };
+
   const updatePreferences = (changes: Partial<UserPreferences>) => {
     setAppData(prev => ({
       ...prev,
@@ -475,7 +520,7 @@ console.log("Active Plan ID:", activePlanId);
 
       case ViewType.CALENDAR:
         if (appData.preferences.trainingContext !== 'general') {
-          return <SpecializedTrackView context={appData.preferences.trainingContext} onOpenSettings={() => setIsSettingsOpen(true)} />;
+          return <SpecializedTrackView context={appData.preferences.trainingContext} onOpenSettings={() => setIsSettingsOpen(true)} selectedExerciseIds={appData.rehab.selectedExerciseIds} customExercises={appData.rehab.customExercises} onToggleExercise={handleToggleRehabExercise} onAddCustomExercise={handleAddCustomRehabExercise} onDeleteCustomExercise={handleDeleteCustomRehabExercise} />;
         }
         return (
           <CalendarView
@@ -491,7 +536,7 @@ console.log("Active Plan ID:", activePlanId);
 
       case ViewType.PLANS:
         if (appData.preferences.trainingContext !== 'general') {
-          return <SpecializedTrackView context={appData.preferences.trainingContext} onOpenSettings={() => setIsSettingsOpen(true)} />;
+          return <SpecializedTrackView context={appData.preferences.trainingContext} onOpenSettings={() => setIsSettingsOpen(true)} selectedExerciseIds={appData.rehab.selectedExerciseIds} customExercises={appData.rehab.customExercises} onToggleExercise={handleToggleRehabExercise} onAddCustomExercise={handleAddCustomRehabExercise} onDeleteCustomExercise={handleDeleteCustomRehabExercise} />;
         }
         return (
           <PlansView
