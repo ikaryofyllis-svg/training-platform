@@ -11,6 +11,8 @@ export interface VisualTheme {
     activateProgram: string;
     continueWorkout: string;
     phaseLabel: string;
+    homeTitle: string;
+    browseTitle: string;
   };
   phaseNames: string[];
 }
@@ -28,7 +30,9 @@ export const VISUAL_THEMES: VisualTheme[] = [
     copy: {
       activateProgram: 'Activate',
       continueWorkout: 'Continue',
-      phaseLabel: 'Block'
+      phaseLabel: 'Block',
+      homeTitle: 'Active Protocol',
+      browseTitle: 'Browse Protocols'
     },
     phaseNames: ['Foundation', 'Build', 'Intensity', 'Peak', 'Reset']
   },
@@ -42,7 +46,9 @@ export const VISUAL_THEMES: VisualTheme[] = [
     copy: {
       activateProgram: 'Iku zo!',
       continueWorkout: 'Power up',
-      phaseLabel: 'Arc'
+      phaseLabel: 'Arc',
+      homeTitle: 'Current Quest',
+      browseTitle: 'Choose Your Next Arc'
     },
     phaseNames: ['Awakening', 'Power Gathering', 'Limit Break', 'Ascension', 'Mastery']
   },
@@ -56,7 +62,9 @@ export const VISUAL_THEMES: VisualTheme[] = [
     copy: {
       activateProgram: "Let's bloom",
       continueWorkout: 'Keep growing',
-      phaseLabel: 'Season'
+      phaseLabel: 'Season',
+      homeTitle: 'Your Journey',
+      browseTitle: 'Explore New Paths'
     },
     phaseNames: ['Root', 'Grow', 'Strengthen', 'Flourish', 'Renew']
   }

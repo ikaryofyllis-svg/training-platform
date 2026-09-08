@@ -33,17 +33,17 @@ body { margin: 0; background: rgb(var(--color-background-light)); }
 .dark .theme-root { background: rgb(var(--color-background-dark)); color: white; }
 
 .theme-atmosphere img {
-  opacity: 0.16;
-  filter: saturate(1.1) contrast(1.05);
+  opacity: 0.38;
+  filter: saturate(1.28) contrast(1.1);
 }
 
 .theme-atmosphere-overlay {
-  background: linear-gradient(to bottom, rgb(var(--color-background-light) / 0.2), rgb(var(--color-background-light)) 92%);
+  background: linear-gradient(to bottom, rgb(var(--color-background-light) / 0.04), rgb(var(--color-background-light) / 0.55) 65%, rgb(var(--color-background-light)) 100%);
 }
 
-.dark .theme-atmosphere img { opacity: 0.22; }
+.dark .theme-atmosphere img { opacity: 0.46; }
 .dark .theme-atmosphere-overlay {
-  background: linear-gradient(to bottom, rgb(var(--color-background-dark) / 0.15), rgb(var(--color-background-dark)) 92%);
+  background: linear-gradient(to bottom, rgb(var(--color-background-dark) / 0.04), rgb(var(--color-background-dark) / 0.55) 65%, rgb(var(--color-background-dark)) 100%);
 }
 .theme-glow { box-shadow: 0 24px 70px var(--theme-glow); }
 

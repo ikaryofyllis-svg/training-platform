@@ -3,6 +3,7 @@ export enum ViewType {
   CALENDAR = 'calendar',
   PLANS = 'plans',
   PERFORMANCE = 'performance',
+  SETTINGS = 'settings',
   COACH = 'coach',
   WORKOUT_DETAIL = 'workout_detail',
   PROGRAM_INTRO = 'program_intro'

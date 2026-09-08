@@ -63,7 +63,7 @@ const HomeView: React.FC<HomeViewProps> = ({
       <header className="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-6 py-6 flex items-center justify-between">
         <div>
           <h1 className="text-xl font-black uppercase tracking-tighter italic">
-            Active Protocol
+            {visualTheme.copy.homeTitle}
           </h1>
         </div>
         <button
@@ -153,7 +153,7 @@ const HomeView: React.FC<HomeViewProps> = ({
       <section className="px-6 mt-8 pb-12">
   <div className="flex items-center gap-4 mb-6">
   <h2 className="text-lg font-black uppercase tracking-tight whitespace-nowrap">
-    Browse Protocols
+    {visualTheme.copy.browseTitle}
   </h2>
 
   <div className="flex-1 h-[2px] bg-gradient-to-r from-primary via-primary/50 to-transparent rounded-full" />

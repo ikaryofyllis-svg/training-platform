@@ -18,16 +18,25 @@ interface SettingsModalProps {
   onVisualThemeChange: (theme: VisualThemeId) => void;
   onTrainingContextChange: (context: TrainingContext) => void;
   onGoalsChange: (goals: TrainingGoal[]) => void;
+  mode?: 'modal' | 'page';
 }
 
-const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, units, onUnitChange, onLogout, userName = 'Athlete', userEmail = '', userAvatar, visualTheme, trainingContext, goals, onVisualThemeChange, onTrainingContextChange, onGoalsChange }) => {
+const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, units, onUnitChange, onLogout, userName = 'Athlete', userEmail = '', userAvatar, visualTheme, trainingContext, goals, onVisualThemeChange, onTrainingContextChange, onGoalsChange, mode = 'modal' }) => {
   if (!isOpen) return null;
+  const isPage = mode === 'page';
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-end justify-center">
-      <div className="absolute inset-0 bg-black/80 backdrop-blur-md" onClick={onClose}></div>
-      <div className="relative max-h-[92vh] w-full max-w-md overflow-y-auto bg-white dark:bg-card-dark rounded-t-[48px] p-8 animate-in slide-in-from-bottom duration-500 shadow-[0_-20px_60px_rgba(0,0,0,0.5)] border-t border-white/5">
-        <div className="w-16 h-1.5 bg-gray-200 dark:bg-white/10 rounded-full mx-auto mb-10"></div>
+    <div className={isPage ? 'animate-in fade-in px-5 pb-32 pt-7 duration-500' : 'fixed inset-0 z-[100] flex items-end justify-center'}>
+      {!isPage && <div className="absolute inset-0 bg-black/80 backdrop-blur-md" onClick={onClose}></div>}
+      <div className={isPage
+        ? 'relative w-full rounded-[36px] border border-white/60 bg-white/80 p-6 shadow-xl backdrop-blur-xl dark:border-white/10 dark:bg-card-dark/80'
+        : 'relative max-h-[92vh] w-full max-w-md overflow-y-auto bg-white dark:bg-card-dark rounded-t-[48px] p-8 animate-in slide-in-from-bottom duration-500 shadow-[0_-20px_60px_rgba(0,0,0,0.5)] border-t border-white/5'}>
+        {isPage ? (
+          <div className="mb-10 flex items-center gap-3">
+            <span className="material-symbols-outlined text-primary">settings</span>
+            <h2 className="text-2xl font-black uppercase tracking-tight italic">Settings</h2>
+          </div>
+        ) : <div className="w-16 h-1.5 bg-gray-200 dark:bg-white/10 rounded-full mx-auto mb-10"></div>}
         
         <div className="flex items-center gap-6 mb-12">
           <div className="w-20 h-20 rounded-[28px] bg-primary flex items-center justify-center overflow-hidden text-white text-2xl font-black border-4 border-primary/20 italic shadow-2xl shadow-primary/30">
@@ -130,12 +139,12 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, units, o
           </section>
         </div>
 
-        <button 
+        {!isPage && <button
           onClick={onClose}
           className="w-full mt-12 bg-gray-900 dark:bg-white text-white dark:text-black font-black py-6 rounded-[28px] uppercase tracking-[0.4em] text-xs shadow-2xl active:scale-95 transition-all"
         >
           Return to Deck
-        </button>
+        </button>}
       </div>
     </div>
   );

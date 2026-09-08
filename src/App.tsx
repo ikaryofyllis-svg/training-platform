@@ -513,6 +513,27 @@ console.log("Active Plan ID:", activePlanId);
           />
         );
 
+      case ViewType.SETTINGS:
+        return (
+          <SettingsModal
+            mode="page"
+            isOpen
+            onClose={() => setCurrentView(ViewType.HOME)}
+            units={units}
+            onUnitChange={setUnits}
+            onLogout={handleLogout}
+            userName={userProfile?.name}
+            userEmail={userProfile?.email}
+            userAvatar={userProfile?.avatar}
+            visualTheme={appData.preferences.visualTheme}
+            trainingContext={appData.preferences.trainingContext}
+            goals={appData.preferences.goals}
+            onVisualThemeChange={(visualTheme: VisualThemeId) => updatePreferences({ visualTheme })}
+            onTrainingContextChange={(trainingContext: TrainingContext) => updatePreferences({ trainingContext })}
+            onGoalsChange={(goals: TrainingGoal[]) => updatePreferences({ goals })}
+          />
+        );
+
       case ViewType.WORKOUT_DETAIL:
         return activeSession ? (
           <DailyWorkoutView
@@ -548,7 +569,7 @@ console.log("Active Plan ID:", activePlanId);
 
   return (
     <div data-theme={appData.preferences.visualTheme} className="theme-root relative isolate flex min-h-screen max-w-md flex-col mx-auto overflow-hidden">
-      <div className="theme-atmosphere pointer-events-none fixed left-1/2 top-0 z-0 h-[440px] w-full max-w-md -translate-x-1/2 overflow-hidden" aria-hidden="true">
+      <div className="theme-atmosphere pointer-events-none fixed left-1/2 top-0 z-0 h-[540px] w-full max-w-md -translate-x-1/2 overflow-hidden" aria-hidden="true">
         <img src={getVisualTheme(appData.preferences.visualTheme).heroImage} alt="" className="h-full w-full object-cover" />
         <div className="absolute inset-0 theme-atmosphere-overlay" />
       </div>
