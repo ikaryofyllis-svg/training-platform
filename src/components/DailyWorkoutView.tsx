@@ -1,6 +1,6 @@
 import React from 'react';
 import { summarizeWorkout } from '../domain/workouts';
-import { Session, UnitSystem } from '../types';
+import { CardioLog, CardioLogInput, Session, UnitSystem } from '../types';
 import WorkoutBlockRenderer from './workout/WorkoutBlockRenderer';
 
 interface Props {
@@ -10,11 +10,13 @@ interface Props {
   onBack: () => void;
   onComplete?: () => void;
   onSaveLog: (exerciseId: string, weight: number, reps: number, sets: number) => void;
+  onSaveCardio: (log: CardioLogInput) => void;
+  cardioLog?: CardioLog;
 }
 
 const modeLabels = { single: 'Strength', pyramid: 'Pyramid', superset: 'Superset', giant_set: 'Giant set', cardio: 'Cardio' };
 
-const DailyWorkoutView: React.FC<Props> = ({ session, units, currentDay, onBack, onComplete, onSaveLog }) => {
+const DailyWorkoutView: React.FC<Props> = ({ session, units, currentDay, onBack, onComplete, onSaveLog, onSaveCardio, cardioLog }) => {
   const isRestDay = session.blocks.length === 0;
   const isCompleted = session.completed || session.day < currentDay;
   const summary = summarizeWorkout(session.blocks);
@@ -46,7 +48,7 @@ const DailyWorkoutView: React.FC<Props> = ({ session, units, currentDay, onBack,
             <p className="mx-auto mt-2 max-w-xs text-sm leading-relaxed text-gray-500">Recover today. Prioritize sleep, hydration, food, and light mobility.</p>
           </section>
         ) : session.blocks.map((block, blockIndex) => (
-          <WorkoutBlockRenderer key={`${block.type}-${blockIndex}`} block={block} blockIndex={blockIndex} units={units} onSave={onSaveLog} />
+          <WorkoutBlockRenderer key={`${block.type}-${blockIndex}`} block={block} blockIndex={blockIndex} units={units} onSave={onSaveLog} onSaveCardio={onSaveCardio} cardioLog={cardioLog} />
         ))}
       </main>
 

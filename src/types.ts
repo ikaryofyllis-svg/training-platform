@@ -49,6 +49,20 @@ export interface CardioConfig {
   intensity?: string;
 }
 
+export interface CardioLogInput {
+  durationMinutes: number;
+  distanceKm: number;
+  averageSpeedKmh: number;
+  caloriesBurned: number;
+}
+
+export interface CardioLog extends CardioLogInput {
+  date: string;
+  programId: string;
+  sessionDay: number;
+  mode: CardioConfig['mode'];
+}
+
 export interface TrainingBlock {
   type: TrainingBlockType;
   label?: string;

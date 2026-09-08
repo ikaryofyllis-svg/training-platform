@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ViewType, UnitSystem, Session, WorkoutPlan } from './types';
+import { CardioLog, CardioLogInput, ViewType, UnitSystem, Session, WorkoutPlan } from './types';
 import { WORKOUT_PLANS } from "./data/programs";
 import HomeView from './components/HomeView';
 import CalendarView from './components/CalendarView';
@@ -30,7 +30,15 @@ interface AppData {
       sets: number;
     }[];
   };
+  cardioLogs: CardioLog[];
 }
+
+const emptyAppData = (): AppData => ({
+  activePlanId: 'femme-fatale',
+  programs: {},
+  exerciseLogs: {},
+  cardioLogs: []
+});
 
 const App: React.FC = () => {
 
@@ -48,25 +56,43 @@ const loadInitialData = (): AppData => {
     const stored = localStorage.getItem(STORAGE_KEY);
 
     if (!stored) {
-      return {
-        activePlanId: "femme-fatale",
-        programs: {},
-        exerciseLogs: {},
-      };
+      return emptyAppData();
     }
 
-    return JSON.parse(stored);
+    const parsed = JSON.parse(stored) as Partial<AppData>;
+    return {
+      activePlanId: parsed.activePlanId || 'femme-fatale',
+      programs: parsed.programs || {},
+      exerciseLogs: parsed.exerciseLogs || {},
+      cardioLogs: parsed.cardioLogs || []
+    };
   } catch (error) {
     console.error("Storage corrupted. Resetting...");
     localStorage.removeItem(STORAGE_KEY);
 
-    return {
-      activePlanId: "femme-fatale",
-      programs: {},
-      exerciseLogs: {},
-    };
+    return emptyAppData();
   }
 };
+
+  const handleSaveCardio = (log: CardioLogInput) => {
+    if (selectedSessionId === null || !activeSession) return;
+
+    const savedLog: CardioLog = {
+      ...log,
+      date: new Date().toISOString().split('T')[0],
+      programId: activePlanId,
+      sessionDay: selectedSessionId,
+      mode: activeSession.blocks.find(block => block.type === 'cardio')?.cardio?.mode || 'steady'
+    };
+
+    setAppData(prev => ({
+      ...prev,
+      cardioLogs: [
+        ...prev.cardioLogs.filter(item => !(item.programId === activePlanId && item.sessionDay === selectedSessionId)),
+        savedLog
+      ]
+    }));
+  };
 
 
   // ✅ Persist everything
@@ -303,6 +329,9 @@ console.log("Active Plan ID:", activePlanId);
   };
 
   const activeSession = sessions.find(s => s.day === selectedSessionId);
+  const activeCardioLog = appData.cardioLogs.find(
+    log => log.programId === activePlanId && log.sessionDay === selectedSessionId
+  );
   const introProgram = WORKOUT_PLANS.find(p => p.id === viewingProgramId);
 
   if (!isAuthenticated) {
@@ -368,6 +397,8 @@ console.log("Active Plan ID:", activePlanId);
             onComplete={handleCompleteWorkout}
             currentDay={currentDay}
             onSaveLog={handleSaveLog}   // ✅ THIS LINE IS REQUIRED
+            onSaveCardio={handleSaveCardio}
+            cardioLog={activeCardioLog}
           />
         ) : null;
 

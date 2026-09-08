@@ -1,6 +1,7 @@
 import React from 'react';
 import { getBlockMode } from '../../domain/workouts';
-import { TrainingBlock, UnitSystem } from '../../types';
+import { CardioLog, CardioLogInput, TrainingBlock, UnitSystem } from '../../types';
+import CardioEntryCard from './CardioEntryCard';
 import ExerciseEntryCard from './ExerciseEntryCard';
 
 interface Props {
@@ -8,6 +9,8 @@ interface Props {
   blockIndex: number;
   units: UnitSystem;
   onSave: (exerciseId: string, weight: number, reps: number, sets: number) => void;
+  onSaveCardio: (log: CardioLogInput) => void;
+  cardioLog?: CardioLog;
 }
 
 const Heading: React.FC<{ eyebrow: string; title: string; detail?: string }> = ({ eyebrow, title, detail }) => (
@@ -17,7 +20,7 @@ const Heading: React.FC<{ eyebrow: string; title: string; detail?: string }> = (
   </div>
 );
 
-const WorkoutBlockRenderer: React.FC<Props> = ({ block, blockIndex, units, onSave }) => {
+const WorkoutBlockRenderer: React.FC<Props> = ({ block, blockIndex, units, onSave, onSaveCardio, cardioLog }) => {
   const mode = getBlockMode(block);
 
   if (mode === 'cardio') {
@@ -30,6 +33,7 @@ const WorkoutBlockRenderer: React.FC<Props> = ({ block, blockIndex, units, onSav
           {block.cardio?.durationMinutes && <p className="text-4xl font-black">{block.cardio.durationMinutes}<span className="ml-1 text-xs text-sky-300">MIN</span></p>}
         </div>
         <p className="mt-5 rounded-2xl bg-white/10 p-4 text-sm font-bold text-sky-100">{block.cardio?.intervals || block.cardio?.intensity || 'Keep a sustainable, controlled pace.'}</p>
+        <CardioEntryCard cardio={block.cardio} existingLog={cardioLog} onSave={onSaveCardio} />
       </section>
     );
   }
