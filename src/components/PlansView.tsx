@@ -1,15 +1,18 @@
 import React from 'react';
 import { WORKOUT_PLANS } from "../data/programs";
-import { UnitSystem } from '../types';
+import { UnitSystem, VisualThemeId } from '../types';
+import { getVisualTheme } from '../theme/themes';
 
 interface PlansViewProps {
   activePlanId: string;
   onActivate: (id: string) => void;
   onViewIntro: (id: string) => void;
   units: UnitSystem;
+  visualTheme: VisualThemeId;
 }
 
-const PlansView: React.FC<PlansViewProps> = ({ activePlanId, onActivate, onViewIntro, units }) => {
+const PlansView: React.FC<PlansViewProps> = ({ activePlanId, onActivate, onViewIntro, units, visualTheme }) => {
+  const theme = getVisualTheme(visualTheme);
   const activePlan = WORKOUT_PLANS.find(p => p.id === activePlanId);
   if (!activePlan) return null;
 
@@ -149,7 +152,7 @@ const PlansView: React.FC<PlansViewProps> = ({ activePlanId, onActivate, onViewI
                       onClick={() => onActivate(plan.id)}
                       className="flex-1 bg-primary text-white py-3 rounded-xl text-[9px] font-black uppercase tracking-[0.15em] shadow-lg shadow-primary/20 hover:bg-red-600 transition-all active:scale-95 italic"
                     >
-                      Activate
+                      {theme.copy.activateProgram}
                     </button>
                   </div>
                 </div>

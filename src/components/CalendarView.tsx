@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
-import { Session, WorkoutPlan } from '../types';
+import { Session, VisualThemeId, WorkoutPlan } from '../types';
+import { getThemedPhaseName, getVisualTheme } from '../theme/themes';
 
 interface CalendarViewProps {
   onOpenWorkout: (session: Session) => void;
@@ -9,10 +10,12 @@ interface CalendarViewProps {
   activePlan: WorkoutPlan;
   onFullReset: () => void;
   onPhaseReset: () => void;
+  visualTheme: VisualThemeId;
 }
 
 
-const CalendarView: React.FC<CalendarViewProps> = ({ onOpenWorkout, currentDay, sessions, activePlan, onFullReset, onPhaseReset }) => {
+const CalendarView: React.FC<CalendarViewProps> = ({ onOpenWorkout, currentDay, sessions, activePlan, onFullReset, onPhaseReset, visualTheme }) => {
+  const theme = getVisualTheme(visualTheme);
   console.log("THIS IS THE CORRECT CALENDAR FILE");
   console.log("FullReset:", typeof onFullReset);
   console.log("PhaseReset:", typeof onPhaseReset);
@@ -178,10 +181,10 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onOpenWorkout, currentDay, 
           {phaseForWeek && (
             <div>
               <p className="text-[10px] font-black uppercase tracking-[0.4em] text-blue-500">
-                Phase {activePlan.phases.indexOf(phaseForWeek) + 1}
+                {theme.copy.phaseLabel} {activePlan.phases.indexOf(phaseForWeek) + 1}
               </p>
               <p className="text-xs font-bold uppercase tracking-widest text-blue-400">
-                {phaseForWeek.name}
+                {getThemedPhaseName(visualTheme, activePlan.phases.indexOf(phaseForWeek))}
               </p>
             </div>
           )}
@@ -285,13 +288,13 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onOpenWorkout, currentDay, 
           <div className="space-y-3">
             <button
               onClick={() => {
-                if (confirm("Reset current phase?")) {
+                if (confirm(`Reset current ${theme.copy.phaseLabel.toLowerCase()}?`)) {
                   onPhaseReset();
                 }
               }}
               className="w-full py-3 rounded-xl bg-gray-100 dark:bg-white/5 text-sm font-bold uppercase tracking-widest hover:bg-gray-200 dark:hover:bg-white/10 transition"
             >
-              Reset Current Phase
+              Reset Current {theme.copy.phaseLabel}
             </button>
 
             <button

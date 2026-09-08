@@ -80,8 +80,8 @@ const HomeView: React.FC<HomeViewProps> = ({
 
     {/* Background Image */}
     <img
-      src={visualTheme.heroImage}
-      alt=""
+      src={activePlan.image}
+      alt={activePlan.name}
       className="absolute inset-0 w-full h-full object-cover brightness-75"
     />
 
@@ -134,7 +134,7 @@ const HomeView: React.FC<HomeViewProps> = ({
           disabled={hasSpecializedProfile}
           className="flex-1 bg-primary hover:brightness-110 transition py-4 rounded-2xl font-black uppercase tracking-wide disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {hasSpecializedProfile ? 'Plans in review' : 'Continue'}
+          {hasSpecializedProfile ? 'Plans in review' : visualTheme.copy.continueWorkout}
         </button>
 
         <button

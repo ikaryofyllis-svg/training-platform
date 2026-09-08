@@ -16,6 +16,7 @@ import SpecializedTrackView from './components/SpecializedTrackView';
 import { normalizeWorkoutDay } from './domain/workouts';
 import { loadCloudState, saveCloudState } from './services/cloudState';
 import { signInWithGoogle, supabase } from './services/supabase';
+import { getVisualTheme } from './theme/themes';
 const STORAGE_KEY = "fitnessAppData_v2";
 interface AppData {
   activePlanId: string;
@@ -484,6 +485,7 @@ console.log("Active Plan ID:", activePlanId);
             activePlan={activePlan}
             onFullReset={handleFullReset}
             onPhaseReset={handlePhaseReset}
+            visualTheme={appData.preferences.visualTheme}
           />
         );
 
@@ -497,6 +499,7 @@ console.log("Active Plan ID:", activePlanId);
             onActivate={handleActivatePlan}
             onViewIntro={handleViewIntro}
             units={units}
+            visualTheme={appData.preferences.visualTheme}
           />
         );
 
@@ -534,6 +537,7 @@ console.log("Active Plan ID:", activePlanId);
             units={units}
             onBack={() => setCurrentView(ViewType.PLANS)}
             onActivate={handleActivatePlan}
+            visualTheme={appData.preferences.visualTheme}
           />
         ) : null;
 
@@ -543,8 +547,12 @@ console.log("Active Plan ID:", activePlanId);
   };
 
   return (
-    <div data-theme={appData.preferences.visualTheme} className="theme-root flex min-h-screen max-w-md flex-col mx-auto">
-      <main className="flex-1 overflow-y-auto pb-24">
+    <div data-theme={appData.preferences.visualTheme} className="theme-root relative isolate flex min-h-screen max-w-md flex-col mx-auto overflow-hidden">
+      <div className="theme-atmosphere pointer-events-none fixed left-1/2 top-0 z-0 h-[440px] w-full max-w-md -translate-x-1/2 overflow-hidden" aria-hidden="true">
+        <img src={getVisualTheme(appData.preferences.visualTheme).heroImage} alt="" className="h-full w-full object-cover" />
+        <div className="absolute inset-0 theme-atmosphere-overlay" />
+      </div>
+      <main className="relative z-10 flex-1 overflow-y-auto pb-24">
         {renderView()}
       </main>
 

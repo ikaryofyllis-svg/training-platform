@@ -11,7 +11,7 @@ export enum ViewType {
 export enum UnitSystem { METRIC = 'kg', IMPERIAL = 'lbs' }
 
 export type VisualThemeId = 'forge' | 'ascend' | 'bloom';
-export type TrainingContext = 'general' | 'prenatal' | 'postpartum';
+export type TrainingContext = 'general' | 'prenatal' | 'postpartum' | 'post_injury';
 export type TrainingGoal = 'strength' | 'conditioning' | 'hypertrophy' | 'mobility';
 
 export interface UserPreferences {

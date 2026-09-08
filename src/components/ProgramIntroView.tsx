@@ -1,15 +1,18 @@
 
 import React from 'react';
-import { Program, UnitSystem } from '../types';
+import { Program, UnitSystem, VisualThemeId } from '../types';
+import { getVisualTheme } from '../theme/themes';
 
 interface ProgramIntroViewProps {
   program: Program;
   units: UnitSystem;
   onBack: () => void;
   onActivate: (id: string) => void;
+  visualTheme: VisualThemeId;
 }
 
-const ProgramIntroView: React.FC<ProgramIntroViewProps> = ({ program, units, onBack, onActivate }) => {
+const ProgramIntroView: React.FC<ProgramIntroViewProps> = ({ program, units, onBack, onActivate, visualTheme }) => {
+  const theme = getVisualTheme(visualTheme);
 
   // ✅ Safety guard
   if (!program) {
@@ -119,7 +122,7 @@ const ProgramIntroView: React.FC<ProgramIntroViewProps> = ({ program, units, onB
                onClick={() => onActivate(program.id)}
                className="w-full bg-primary hover:bg-red-600 text-white font-black py-7 rounded-[32px] uppercase tracking-[0.4em] text-xs shadow-[0_25px_50px_rgba(208,37,37,0.4)] flex items-center justify-center gap-3 active:scale-[0.97] transition-all italic group"
              >
-               Activate
+               {theme.copy.activateProgram}
                <span className="material-symbols-outlined group-hover:translate-x-2 transition-transform">bolt</span>
              </button>
              <button 
